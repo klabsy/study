@@ -1,0 +1,52 @@
+实验一  python运算符、内置函数、序列基本用法
+1.	编写程序，输入两个集合，输出它们的交集、并集和差集；
+a=set(input("请输入第一个集合:"))
+b=set(input("请输入第二个集合:"))
+print("第一个集合为:",a)
+print("第二个集合为:",b)
+c=a&b
+d=a|b
+e=a-b
+print("交集:",c)
+print("并集:",d)
+print("差集:",e)
+ 
+2.	编写程序，输入一个包含若干整数的列表，输入一个新列表，要求新列表中只包含原列表中的偶数；
+a1=list(map(int,set(input("输入一个包含若干整数:"))))
+a2=[]
+for item in a1:
+    if(item%2==0):
+        a2.append(item)
+print("原列表为:",a1)
+print("新列表为:",a2)
+  
+
+3.	编写程序，输入两个分别包含若干整数的列表LA、LB，输出一个字典，要求用LA中的元素作为键，用LB中的元素作为值，并且最终字典中的元素数量取决于LA和LB中元素较少的列表的数量;
+LA=list(input("输入包含若干整数的列表LA:"))
+LB=list(input("输入包含若干整数的列表LB:"))
+LC={}
+a=len(LA)
+b=len(LB)
+if(a>b):
+    for i in range(b):
+        LC[LA[i]]=LB[i]
+else:
+    for i in range(a):
+        LC[LA[i]]=LB[i]
+print("字典为:",LC)
+
+ 
+4.	编写程序，输入一个包含若干整数的列表，输出新列表，要求新列表中的所有元素来自于输入的列表，并且降序排列；
+A=[1,2,3,4,5,6]
+A.sort()
+A=A[::-1]
+print("降序排列:",A)
+
+ 
+5.	编写程序，输入一个字符串，输出其中出现的字符及其出现的次数，要求使用字典。
+Str=input("请输入一个字符串：")
+result={}
+for i in Str:
+result[i]=Str.count(i)
+print("输出其中出现的字符及其出现的次数:",result)
+  
