@@ -1,0 +1,97 @@
+
+package javaapplication1;
+
+import java.util.Scanner;
+
+public class JavaApplication1 {
+
+    public static void main(String[] args) {
+        int number;
+        Scanner sc=new Scanner(System.in);
+        bankaccount account = new bankaccount(); 
+        person one = new person();
+        System.out.println("确定年利率：");
+        double profit =sc.nextDouble();
+        do{
+        one.menu();
+        System.out.println("输入功能:");
+        number = sc.nextInt();
+        if(0>number||number >4){
+            System.out.print("无此功能，请重新输入");}
+        else{
+        switch(number){
+            case 1:{    System.out.println("请输入您的姓名：");
+                        String name = sc.next();
+                        one.name(name);
+                        System.out.println("请输入您的卡号：");
+                        int count = sc.nextInt();
+                        one.count(count);
+                        System.out.println("请输入您的地址：");
+                        String address = sc.next();
+                        one.adress(address);break;}
+            case 2 :{ System.out.println("请输入存取的金额：");
+                        double deposit_money = sc.nextDouble();
+                        account.deposit(deposit_money);
+                         System.out.println("请输入存入年限：");
+                        double year =sc.nextDouble();
+                        account.yearprofit(profit,year);break;
+            }
+            case 3 : {System.out.println("请输入取出的金额：");
+                        double withdraw_money = sc.nextDouble();
+                        account.withdraw(withdraw_money);break;}
+            case 4 : {account.selectmoney();break;}
+        }
+        }
+    }while(number!=0);
+        }
+    
+}
+class bankaccount{
+    
+    double money = 0;
+    double money_rates = 0 ;
+    
+    public void deposit(double money_1){
+        this.money = this.money+money_1;
+        System.out.println("此次存款为:"+money_1);
+       } 
+    public void withdraw(double get_money){
+   
+        if(get_money>money){
+            System.out.println("账户余额不足");}
+        else {
+            money = money - get_money;
+               System.out.println("取出成功!");
+        } 
+    }
+    public void yearprofit(double y_profit,double year) {    //年利息=金额*年利率
+		money_rates = money * y_profit*year ;  
+                System.out.println("年利率为："+y_profit);
+                System.out.println(year+"年的总利息为：" + money);
+		}
+    public void selectmoney(){
+                System.out.println("账户余额:"+ (money + money_rates) );
+    }
+}
+class person{
+    int count;
+    String name;
+    String address;
+     public void menu(){
+    System.out.println("------->>银行账户<<--------");
+    System.out.println("--------1.增加用户信息--------");
+    System.out.println("--------2.存款--------");
+    System.out.println("--------3.取款--------");
+    System.out.println("--------4.查询账户余额--------");
+    System.out.println("--------输入0退出--------");
+    }
+    public void count(int count){
+        this.count = count;
+    }
+    public void name(String name){
+        this.name = name;
+    }
+    public void adress(String adress){
+        this.address = adress;
+    }
+}

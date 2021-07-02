@@ -1,0 +1,76 @@
+
+import java.util.Scanner;
+
+abstract class Xingzhuang{
+    public double zhouchang() {
+    return 0;
+ }
+    public Xingzhuang() {
+     super();
+ }
+}
+
+//设计Yuanxing类
+class Yuanxing extends Xingzhuang{
+     private double radius;
+     public Yuanxing(double radius) {
+     this.radius = radius;
+    }
+     @Override
+     public double zhouchang() {
+     return 2 * Math.PI * radius;
+    }
+ }
+
+//设计Juxing类
+  class Juxing extends Xingzhuang{
+        private double h;
+        private double w;
+    public Juxing(double h, double w) {
+        this.h = h;
+        this.w = w;
+   }
+    
+        @Override
+    public double zhouchang() {
+         return 2 * (h + w);
+    }
+  }
+
+//设计Sanjiaoxing类
+    class Sanjiaoxing extends Xingzhuang{
+        private double x;
+        private double y;
+        private double z;
+    public Sanjiaoxing(double x, double y,double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+   }
+        @Override
+    public double zhouchang() {
+         return x + y + z;
+    }
+  }
+
+
+class Exam{
+   public static void compute( Xingzhuang x){
+      System.out.println( "周长=" + x.zhouchang() );
+   }
+   public static void main(String[] args){
+       System.out.println( "矩形周长:" );
+       Xingzhuang Juxing = new Juxing(10,20);
+       compute(Juxing);
+       
+       System.out.println( "三角形形周长:" );
+       Xingzhuang Sanjiaoxing = new Sanjiaoxing(2,3,4);
+       compute(Sanjiaoxing);
+       
+       System.out.println( "圆形周长:" );
+       Xingzhuang Yuanxing  = new Yuanxing(2);
+       compute(Yuanxing);
+       
+ }
+}
+

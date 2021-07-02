@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define number 10  //洞的数量
+#define time 1000  //抓到次数
+
+typedef struct node {
+	int order;
+	int flag;
+	struct node *next;
+}Node,*Linklist;
+
+//创建number个洞
+void Rabbit(Linklist L){
+    Node *p,*q;
+    q=L;int mark=1;
+    int i,j;
+    q->order=1;
+    q->flag=1;
+    for(i=2;i<=number;i++){
+        p=(Node*)malloc(sizeof(Node));
+        p->order=i;
+        p->flag=1;
+        q->next=p;
+        q=p;
+    }
+    q->next=L;
+	p=L;//从第一个位置开始找
+    p->flag=0;
+    for(i=2;i<=time;i++){
+        for(j=0;j<i;j++){
+            p=p->next;
+        }
+        p->flag=0;
+    }
+    for(i=1;i<=number;i++){
+        if(p->flag==1){
+            printf("此洞是第%d号洞!\n",p->order);
+            mark=0;
+    }
+        p=p->next;
+	}
+    if(mark){printf("兔子藏不了!");}
+}
+void main(){
+	Linklist L=(Linklist)malloc(sizeof(Node));
+	Rabbit(L);
+}

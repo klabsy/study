@@ -1,0 +1,100 @@
+
+package javaapplication23;
+import java.util.Scanner;
+
+public class JavaApplication23 {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("确定学生总学生数量:");
+        int number = sc.nextInt();
+        student []stu = new student[number];
+        function gongneng = new function();
+        gongneng.menu();
+        System.out.println("选择功能:");
+        int xuanze = sc.nextInt();
+        switch(xuanze){
+            case 1: System.out.println("输入学生姓名");
+                    String name = sc.next();
+                    System.out.println("输入学生学号");
+                    int sno = sc.nextInt();
+                    System.out.println("输入学生专业");
+                    String major = sc.next();
+                    System.out.println("输入学生所修课程");
+                    String course = sc.next();
+                    gongneng.zengjiaxuesheng(name, sno, major, course, stu);
+        }
+    }   
+}
+
+
+class student {
+    
+    public String Sname;
+    public int Sno;
+    public String major;
+    public String Course;
+    
+    public int get_Sno(){
+         return Sno;                      //获取学号
+    }
+    public void modify_Sno(int sno){
+         this.Sno = sno;                 //修改学号
+    }
+    public String get_name(){
+         return Sname;                   //获取姓名
+    }
+    public void get_name(String sname){
+          this.Sname = sname;            //修改姓名
+    }
+    public String get_Major(){
+         return major;                  //获取专业
+    }
+    public void  modify_Major(String major){
+         this.major = major;            //修改专业
+    }    
+    public String get_Course(){
+         return  Course;                //获取专业
+    }
+    public void modify_Course(String course){
+         this.Course = course;          //修改专业 
+    }
+}
+
+class function {
+    String info_1="[学生姓名\t学号\t专业\t所修课程";
+    public void menu(){
+    System.out.println("------->>学生信息系统<<--------");
+    System.out.println("--------1.增加学生信息--------");
+    System.out.println("--------2.删除学生信息--------");
+    System.out.println("--------3.修改学生信息--------");
+    System.out.println("--------4.查询学生信息--------");
+    }
+    public int xuhao(student[] str1){
+        for(int i = 0; i<str1.length; i++){
+            if(str1[i] != null){
+                return i;
+            }
+        }
+        return 9999;
+    }
+    
+    public void printinfo(student[] str1){
+        System.out.println(info_1);
+        for(int j=0 ;j<str1.length;j++){
+            if(str1[j]!=null)
+            System.out.println(str1[j]);
+        }
+    }
+    public void zengjiaxuesheng(String name,int sno ,String major ,String course,student[] str1){
+        int index = xuhao(str1);
+        student str2 = new student();
+        str2.get_name(name);
+        str2.modify_Sno(sno);
+        str2.modify_Major(major);
+        str2.modify_Course(course);
+        str1[index]=str2;
+        System.out.println("添加学生成功");
+        this.printinfo(str1);
+    }
+}

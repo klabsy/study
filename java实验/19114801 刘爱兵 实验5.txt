@@ -1,0 +1,54 @@
+package javaapplication10;
+import java.util.Scanner;
+public class JavaApplication10 {
+    public static void main(String[] args) {
+        String computer = "";
+        int number ;
+        Scanner sc=new Scanner(System.in);
+        System.out.println("-----------------------欢迎进入猜拳游戏----------------------");
+        System.out.println( "------------游戏规则：剪刀可以剪布，石头可以砸剪刀，布可以包石头--------------");
+        System.out.println("--------------------出拳规则：1.剪刀 2.石头 3.布------------------");
+        System.out.println("---------------------》》》猜拳开始《《《--------------------");
+
+        System.out.println("请选择你的对手：1.喜茶 2.奈雪 3.伏见桃山");
+        number = sc.nextInt();   
+        if(number>3 || number<1 )
+        { System.out.println("查无此对手，");} 
+        else{
+            
+            System.out.print("请输入你的姓名：");
+            String name = sc.next();
+        switch(number){
+            case 1: computer ="喜茶";break;
+            case 2: computer ="奈雪";break;
+            case 3: computer ="伏见桃山";break;
+        }
+                int opponent = (int)(0+Math.random()*(2-0+1));
+                System.out.println(opponent);
+                System.out.println(name + " VS " + computer);
+                System.out.println("要开始吗？（Y/N）");
+                String select = sc.next();
+                if("Y".equals(select)){
+                do{
+                   System.out.println("请出拳：0.剪刀 1.石头 2.布"); 
+                   int user = sc.nextInt();
+                   if(user==0){System.out.println(name+"出拳：剪刀");}
+                   if(user==1){System.out.println(name+"出拳：石头");}
+                   if(user==2){System.out.println(name+"出拳：布");}
+                   if(opponent==0){System.out.println( computer + "出拳：剪刀");}
+                   if(opponent==1){System.out.println( computer + "出拳：石头");}
+                   if(opponent==2){System.out.println( computer + "出拳：布");}
+                   int t_1 =(( user - opponent + 4 ) % 3 ) - 1;
+                   if(t_1 == 1){System.out.println( name + "胜，恭喜！");}
+                   if(t_1 == 0){System.out.println( "结果：和局，完美！");}
+                   if(t_1 == -1){System.out.println( "结果：" + computer + "胜，安慰！");} 
+                    System.out.println("是否进行下一轮？（Y/N）");
+                    select = sc.next();
+                      }while("Y".equals(select));
+                System.out.println("游戏结束，欢迎下次来玩!");
+                }
+                else if("N".equals(select)){System.out.println("游戏结束，欢迎下次来玩!");}
+            }
+    }
+    
+}

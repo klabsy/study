@@ -1,0 +1,49 @@
+package javaapplication3;
+import java.util.Scanner;
+public class JavaApplication3 {
+    public static void main(String[] args) {
+        int x ,y ;
+        int number,result ;
+       do{ 
+        System.out.println("请输入待计算x:");
+        Scanner sc= new Scanner(System.in);
+        x = sc.nextInt();
+        System.out.println("请输入待计算y:");
+        y = sc.nextInt();
+        System.out.println("----请选择运算方式----");
+        System.out.println("----1:加法----");
+        System.out.println("----2:减法----");
+        System.out.println("-----3:乘法----");
+        System.out.println("-----4:除法----");
+        System.out.println("----输入0退出----");
+        System.out.println("请选择：");
+        number = sc.nextInt();
+        if(number >4){
+            System.out.print("无此功能，请重新输入");}
+        else{
+            switch (number) {
+                case 1:
+                    result = x + y;
+                    System.out.println(" x + y = " + result);
+                    break;
+                case 2:
+                    result = x - y;
+                    System.out.println(" x - y = "  + result);
+                    break;
+                case 3:
+                    result = x * y ;
+                    System.out.println(" x * y = "  + result);
+                    break;
+                case 4:
+                    if( y == 0 ){
+                     System.out.print("分母不能为0，请重新输入");}
+                    else{
+                        result = x / y;
+                        System.out.println(" x / y = " + result);
+                        break; }
+                    }
+                }
+       
+        }while (number!=0);
+    }
+}

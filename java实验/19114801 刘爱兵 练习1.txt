@@ -1,0 +1,33 @@
+package com.company;
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("输入一个整型值：");
+        int k = sc.nextInt();
+        MyByte s = new MyByte();
+        try {
+            s.check(k);
+            System.out.println(k);
+        } catch (ByteSizeException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
+    class MyByte{
+    public static byte check (int a ) throws ByteSizeException{
+        if(a<=-28||a>=28)
+            throw new ByteSizeException("数字超出了Byte表述范围");
+        return (byte)a ;
+    }
+}
+class ByteSizeException extends Exception{
+
+    public ByteSizeException(String message) {
+        super(message);
+
+    }
+
+}

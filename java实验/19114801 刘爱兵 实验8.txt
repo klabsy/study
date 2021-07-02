@@ -1,0 +1,50 @@
+
+package javaapplication23;
+import java.util.Scanner;
+
+public class JavaApplication23 {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("确定学生总学生数量:");
+        int number = sc.nextInt();
+        student []stu = new student[number];
+        
+    }
+    
+}
+class student {
+    
+    public String Sname;
+    public int Sno;
+    public String major;
+    public String Course;
+    
+    public int get_Sno(){
+//        System.out.println("输入学生学号");
+         return Sno;
+    }
+    public String get_name(){
+//        System.out.println("输入学生姓名");
+         return Sname;
+    }
+    public String get_Major(){
+//        System.out.println("输入学生专业");
+         return major ;
+    }
+    public String get_Course(){
+//        System.out.println("输入学生所修课程");
+         return  Course;
+    }
+    public void modify_Sno(int sno){
+         this.Sno = sno;
+//         System.out.println("修改课程为:"+Course);
+    }
+    public void modify_Course(String course){
+         this.Course = course;
+//        System.out.println("修改课程为:"+Course);
+    }
+    public void get_info() {
+        System.out.println("[学生姓名" + Sname + "\t学号:" + Sno + "\t专业：" + major + "\t所修课程:" + Course+"]");
+    } 
+}

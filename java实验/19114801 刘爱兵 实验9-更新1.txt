@@ -1,0 +1,228 @@
+
+package javaapplication1;
+
+import java.util.Scanner;
+
+public class bankmange {
+
+    public static void main(String[] args) {
+        Data[] s=new Data[999];
+        int i=0;
+        linkedList sl = new linkedList();
+        int number;
+        Scanner sc=new Scanner(System.in);
+        bankaccount account = new bankaccount(); 
+        person one = new person();
+        System.out.println("确定年利率：");
+        double profit =sc.nextDouble();
+        do{
+        one.menu();
+        System.out.println("输入功能:");
+        number = sc.nextInt();
+        if(0>number||number >5){
+            System.out.print("无此功能，请重新输入");}
+        else{
+        switch(number){
+            case 1:{    System.out.print("请输入您的姓名：");
+                        String name = sc.next();
+                        one.name(name);
+                        System.out.print("请输入您的卡号：");
+                        int count = sc.nextInt();
+                        one.count(count);
+                        System.out.print("请输入您的地址：");
+                        String address = sc.next();
+                        one.adress(address);
+                        System.out.print("请输入注册时存入的金额：");
+                        double deposit_money = sc.nextDouble();
+                        account.deposit(deposit_money);
+                        s[i] = new Data(one.count,one.name,one.address,account.money);
+                        sl.addByOrder(s[i]);
+                        sl.showList();
+                        i++;
+                        break;
+            }
+            case 2 :System.out.print("请输入存入的金额：");
+                        double deposit_money = sc.nextDouble();
+                        account.deposit(deposit_money);
+                        sl.updateData(new Data(one.count,one.name,one.address,account.money));
+                        sl.showList();
+                        break;
+            case 3 :   System.out.print("请输入距离上次存储年限：");
+                        double year =sc.nextDouble();
+                        account.yearprofit(profit,year);
+                        {System.out.print("请输入取出的金额：");
+                        double withdraw_money = sc.nextDouble();
+                        account.withdraw(withdraw_money);
+                        break;}
+            case 4 : {account.selectmoney();break;}
+            case 5 : {System.out.println("请输入您需要注销的卡号：");
+                        int count = sc.nextInt();
+                        one.count(count);
+                        sl.delData(one.count);
+                        sl.showList();}
+       
+        }
+        }
+    }while(number!=0);
+        }
+    
+}
+
+//节点、存储用户信息
+class Data{
+    public int count;
+    public String name;
+    public String address;
+    public double money;
+    public Data next;
+    public double money_rates;
+    public Data(int count, String name,String address,double money) {
+        this.count = count;
+        this.name = name;
+        this.address = address;
+        this.money = money;
+      }
+    public Data(){ }
+
+    @Override
+    public String toString() {
+        return "Data{" +
+                "卡号：" + count +
+                ", 用户名：" + name +",地址："+ address + ",存款: " + money  +
+                '}';
+    }
+}
+//单链表
+class linkedList{
+    private final Data head = new Data(0," "," ",0);
+
+    //插入节点
+    public void addData(Data data){
+        Data first = head;
+        //找到最后一个节点、使用尾插法
+        while (first.next != null){
+            first = first.next;
+        }
+        first.next = data;
+    }
+
+    //按顺序插入
+    public void addByOrder(Data data){
+        Data first = head;
+        Data second = first.next;
+        while (second != null){
+
+            if (second.count > data.count){
+                //表示已经找到
+                break;
+            }else if (first.count == data.count){
+                System.out.println("卡号不能重复！");
+                return;
+            }
+            first = first.next;
+            second = first.next;
+        }
+        data.next = first.next;
+        first.next = data;
+    }
+
+    //根据no值更新链表信息
+    public void updateData(Data newdata){
+        Data first = head.next;
+        if (first == null){
+            System.out.println("该链表为空！");
+            return;
+        }
+        while (first != null){
+            if (first.count == newdata.count){
+                first.money = newdata.money;
+                return;
+            }
+            first = first.next;
+        }
+        System.out.printf("没有找到卡号为%d的用户。\n",newdata.count);
+    }
+    //根据卡号count删除节点
+    public void delData(int count){
+        Data zero = head;
+        Data first = head.next;
+        if (first == null){
+            //如果链表为空
+            System.out.println("该链表为空！");
+            return;
+        }
+        //遍历查找学号为no的节点
+        while (first != null){
+            //找到节点
+            if (first.count == count){
+                zero.next = first.next;
+                return;
+            }
+            zero = zero.next;
+            first = zero.next;
+        }
+        System.out.printf("没有找到卡号为%d的用户。\n",count);
+    }
+    //打印显示链表
+    public void showList(){
+        Data first = head.next;
+        if (first == null){
+            System.out.println("该链表为空！");
+            return;
+        }
+        //遍历输出
+        while (first != null){
+            System.out.println(first);
+            first = first.next;
+        }
+    }
+
+}
+
+
+class bankaccount{
+    
+    double money = 0;
+    double money_rates = 0 ;
+    
+    public void deposit(double money_1){
+        this.money = this.money+money_1;
+        System.out.println("此次存款为:"+money_1);
+       } 
+    public void withdraw(double get_money){
+   
+        if(get_money>money){
+            System.out.println("账户余额不足");}
+        else {
+            money = money - get_money;
+               System.out.println("取出成功!");
+        } 
+    }
+    public void yearprofit(double y_profit,double year) {    //年利息=金额*年利率
+		money_rates = money * y_profit*year ;  
+                System.out.println("年利率为："+y_profit);
+                System.out.println(year+"年的总利息为：" + money_rates);
+		}
+    public void selectmoney(){
+                System.out.println("账户余额:"+ (money + money_rates) );
+    }
+}
+class person{
+    int count;
+    String name;
+    String address;
+     public void menu(){
+    System.out.println("------->>银行账户<<--------");
+    System.out.println("----1.注册用户信息--2.存款--3.取款--4.查询账户余额--5.销户--输入0退出----");
+    }
+    public void count(int count){
+        this.count = count;
+    }
+    public void name(String name){
+        this.name = name;
+    }
+    public void adress(String adress){
+        this.address = adress;
+    }
+ 
+}

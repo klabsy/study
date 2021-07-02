@@ -1,0 +1,53 @@
+import java.util.Scanner;
+public class Calendar {
+	
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		System.out.println("请输入年份:");
+		int year=sc.nextInt();
+                 int[] monthArray={31,28,31,30,31,30,31,31,30,31,30,31};
+//          判断是否是闰年，是闰年二月就多加一天
+                 if(year%4==0&&year%100!=0 || year%400==0) {
+			monthArray[1]++;
+		}
+
+                 int zongtianshu = YearDays(year);
+                 
+                 for(int i=0;i<12;i++){
+                     System.out.println("\t\t\t"+(i+1)+"月");
+                     System.out.println("星期一\t星期二\t星期三\t星期四\t星期五\t星期六\t星期日");
+                        printCalendar(monthArray[i] , zongtianshu);
+                     System.out.println();
+                     zongtianshu =zongtianshu + monthArray[i];
+                 }
+	}
+ //      计算从1900年到当年的前一年底所有天数
+	public static int YearDays(int year) {
+		
+		int YearDays = 0;
+		for(int i=1900; i<year; i++) {
+//	判断是否是闰年，是闰年就多加一天
+			if(year%4==0&&year%100!=0 || year%400==0) {  
+                                      YearDays += 366;}
+                           else    {  YearDays += 365;}
+		}
+		return YearDays;
+	}
+//        输出空格和几号
+	public static void printCalendar(int monthdaynum ,int zongtianshu) {
+//            确定空格数
+                          int m = zongtianshu%7;
+//            确定一个月的天数
+                          int n = monthdaynum;
+			for(int j=1; j <= m + n; j++) {
+                          if(j <= m){
+			System.out.print(" \t");continue;
+                            }
+                          System.out.print( j - m + "\t");
+                          if(j%7==0){
+                            System.out.println();
+                        }
+                     }
+	}
+}
+

@@ -1,0 +1,33 @@
+package javaapplication3;
+import java.util.Scanner;
+public class JavaApplication3 {
+    public static void main(String[] args) {
+        int x ,y ;
+        int number,result ;
+        System.out.println("请输入待计算x:");
+        Scanner sc= new Scanner(System.in);
+        x = sc.nextInt();
+        System.out.println("请输入待计算y:");
+        y = sc.nextInt();
+        System.out.println("请选择运算方式:1为加法,2为减法，3为乘法，4为除法:");
+        number = sc.nextInt();
+            switch (number) {
+                case 1:
+                    result = x + y;
+                    System.out.print(" x+y = " + result);
+                    break;
+                case 2:
+                    result = x - y;
+                    System.out.print(" x-y = "  + result);
+                    break;
+                case 3:
+                    result = x * y ;
+                    System.out.print(" x*y = "  + result);
+                    break;
+                case 4:
+                    result = x / y;
+                    System.out.print(" x/y = " + result);
+                    break;
+            }
+    }
+}

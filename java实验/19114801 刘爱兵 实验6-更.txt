@@ -1,0 +1,93 @@
+
+import java.util.Scanner;
+
+public class characterprint {
+    public static void main(String[] args) {
+        String select =" ";
+        Scanner sc=new Scanner(System.in);
+        System.out.println("---------------------打印字母A K Y ----------------------");
+        System.out.println("------输入方式：如：打印A，输入'A'-------");
+         do{
+        System.out.println("输入你想打印的字母：");
+        String character = sc.next();
+        switch(character){
+            case "A":
+            {System.out.println("-----打印字母A-----");characterprint.A();break;}
+            case "K":
+            {System.out.println("-----打印字母K-----");characterprint.K();break;}
+            case "Y":
+            {System.out.println("------打印字母Y-----");characterprint.Y();;break;}
+        }
+            System.out.println("--------------------");
+            System.out.println("是否想再次输入（yes/no）");
+            select = sc.next();
+             }while("yes".equals(select));
+        
+    }
+
+  public static void A(){ 
+      int width=13;
+        int height=width/2;
+        for (int i=0;i<height;i++){
+            for (int j=0;j<width;j++){
+                
+                if (i==((height+1)/2)){      
+                        if (j<width/2-i || j>width/2+i)
+                             { System.out.print(" "); }
+                        else { System.out.print("*");}
+                }
+                else{   if (j == width/2+i||j == width/2-i)
+                           {System.out.print("*"); }
+                        else {System.out.print(" "); }
+                }
+            }
+            System.out.println(" ");
+        }
+    }
+  
+  public static void K(){
+      int width = 6;
+        int height = width+1;
+        for (int i=0;i<height;i++){
+            for (int j=0;j<width;j++){
+                if(i<=(height/2)){
+                    if(j==0||j==width-i-1)  {
+                        System.out.print("*");}
+                    else {
+                        System.out.print(" ");}
+                }
+                    
+                else {  if(j==0||j==i-1){
+                                System.out.print("*");}
+                        else {
+                                System.out.print(" ");}
+                }
+                    
+            }
+            System.out.println(" ");
+            }
+        }
+  
+  public static void Y(){
+   int width=6;
+   int height=width;
+         for (int i=0;i<height;i++){
+             for (int j=0;j<width;j++){
+                 
+                if (i>=((height-1)/2)){      
+                        if (j==(height-1)/2){  
+                            System.out.print("*");}
+                        else {
+                            System.out.print(" ");}
+                }
+                else {
+                    if (j == i||j == width-i-1){    
+                    System.out.print("*"); }
+                    else { System.out.print(" "); }
+                     }
+             }
+            System.out.println(" ");
+        
+         }
+     }
+}

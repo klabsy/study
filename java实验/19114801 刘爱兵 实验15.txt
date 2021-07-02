@@ -1,0 +1,110 @@
+package javaapplication2;
+
+
+import java.util.Scanner;
+
+class Cylinder<E>{
+    E Xingzhuang;
+
+    public Cylinder (E xingzhuang){
+       Xingzhuang = xingzhuang; 
+    }
+}
+
+//设计Yuanxing类
+class Yuanxing  {
+    private double radius;
+    public Yuanxing(double radius) {
+        this.radius = radius;
+    }
+    
+    public double zhouchang() {
+        return 2 * Math.PI * radius;
+    }
+    public double ares() {
+        return  Math.PI * radius * radius;
+    }
+}
+
+//设计Juxing类
+class Juxing {
+    private double h;
+    private double w;
+    public Juxing(double h, double w) {
+        this.h = h;
+        this.w = w;
+    }
+
+    public double zhouchang() {
+        return 2 * (h + w);
+    }
+    public double ares() {
+        return  h * w;
+    }
+}
+
+//设计Sanjiaoxing类
+class Sanjiaoxing {
+    private double x;
+    private double y;
+    private double z;
+
+    public Sanjiaoxing(double x, double y,double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+    
+    public double zhouchang() {
+        return x + y + z;
+    }
+ 
+}
+
+
+class Exam{
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        int xuanze;
+        do{
+            System.out.println("输入形状：1.矩形 2.三角形 3.圆 0.退出");
+
+            xuanze = sc.nextInt();
+            switch (xuanze){
+                case 1:{
+                    System.out.print("输入矩形的长宽:");
+                    double longth = sc.nextDouble();
+                    double withtd = sc.nextDouble();
+                    Juxing jx = new Juxing(longth,withtd);
+                    Cylinder<Juxing> juxing = new Cylinder<Juxing>(jx);
+                    System.out.println( "矩形周长:" + jx.zhouchang() );
+                    System.out.println( "矩形面积:" + jx.ares() );
+                    break;
+                }
+                case 2:{
+                    System.out.print("输入三角形的三边:");
+                    double a = sc.nextDouble();
+                    double b = sc.nextDouble();
+                    double c = sc.nextDouble();
+                    if(a+b>c&&a+c>b&&b+c>a){
+                        Sanjiaoxing sj = new Sanjiaoxing(a,b,c);
+                        Cylinder<Sanjiaoxing> sanjiaoxing = new Cylinder<Sanjiaoxing>(sj);
+                           System.out.println( "三角形周长:" + sj.zhouchang() );
+//                           System.out.println( "三角形面积:" + sj.ares() );
+                        break;
+                    }
+                    System.out.println("你输入的不能构成三角形");break;
+                }
+                case 3:{
+                    System.out.print("输入圆的半径：");
+                    double r = sc.nextDouble();
+                    Yuanxing yx = new Yuanxing(r);
+                    Cylinder<Yuanxing> yuanxing = new Cylinder<Yuanxing>(yx);
+                           System.out.println( "圆形周长:" + yx.zhouchang() );
+                           System.out.println( "圆形面积:" + yx.ares() );
+                }
+            }
+        }while(xuanze!=0);
+    }
+}
+

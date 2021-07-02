@@ -1,0 +1,36 @@
+public class LinkedList {
+    	public static void main(String[] args) {
+                LinkedList lisk_1 = new LinkedList();
+		lisk_1.insertFirst(3);
+		lisk_1.insertFirst(2);
+		lisk_1.insertFirst(1);
+                lisk_1.print();
+	}
+        
+	private class Data{
+		private Object obj;
+		private Data next = null;
+		Data(Object obj){
+			this.obj = obj;
+		}
+	}
+	private Data first = null;
+//增加
+	public void insertFirst(Object obj){
+		Data data = new Data(obj);
+		data.next = first;
+		first = data;
+	}
+
+//打印单链表       
+	public void print(){
+		if(first == null)
+			System.out.println("链表是空值！");
+		Data one = first;
+		while(one != null){
+			System.out.print(one.obj.toString() + " --> ");
+			one = one.next;
+		}
+		System.out.print("\n");
+	}
+}

@@ -1,0 +1,273 @@
+package javaapplication14;
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("确定学生总学生数量:");
+        int number = sc.nextInt();
+        Student[] stu1 = new Undergraduate[number];
+        Student[] stu2 = new Postgraduate[number];
+        int xuanze;
+        do {
+            function gongneng = new function();
+            gongneng.menu();
+            System.out.println("选择功能:");
+            xuanze = sc.nextInt();
+            switch (xuanze) {
+                case 1: {
+                    System.out.print("输入学生姓名:");
+                    String name = sc.next();
+                    System.out.print("输入学生性别:");
+                    String sex = sc.next();
+                    System.out.print("输入学生年龄:");
+                    int age = sc.nextInt();
+                    String major = "本科生";
+                    System.out.print("输入学生所修课程:");
+                    String course = sc.next();
+                    System.out.print("输入课程分数:");
+                    int score = sc.nextInt();
+                    gongneng.zengjiaxuesheng(name, sex, age, major, course, score, stu1);
+                    break;
+                }
+                case 2: {
+                    System.out.print("输入学生姓名:");
+                    String name = sc.next();
+                    System.out.print("输入学生性别:");
+                    String sex = sc.next();
+                    System.out.print("输入学生年龄:");
+                    int age = sc.nextInt();
+                    String major = "研究生";
+                    System.out.print("输入学生所修课程:");
+                    String course = sc.next();
+                    System.out.print("输入课程分数:");
+                    int score = sc.nextInt();
+                    gongneng.zengjiaxuesheng(name, sex, age, major, course, score, stu2);
+                    break;
+                }
+                case 3: {
+                    System.out.print("输入你要查询的学生学号");
+                    int sno = sc.nextInt();
+                    stu1[sno].getScore();
+                    break;
+                }
+                case 4: {
+                    System.out.print("输入你要查询的学生学号");
+                    int sno = sc.nextInt();
+                    stu2[sno].getScore();
+                    break;
+                }
+
+            }
+        } while (xuanze != 0);
+    }
+
+}
+
+
+interface scoreface {
+    void getScore();
+}
+
+abstract class Student implements scoreface {
+    Scanner in = new Scanner(System.in);
+    int No;
+    String Name;
+    String Sex;
+    int Age;
+    String Major;
+    String Course;
+    int score;
+
+    public int getNo() {
+        return No;
+    }
+
+    public void setNo(int no) {
+        No = no;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public String getSex() {
+        return Sex;
+    }
+
+    public void setSex(String sex) {
+        Sex = sex;
+    }
+
+    public int getAge() {
+        return Age;
+    }
+
+    public void setAge(int age) {
+        Age = age;
+    }
+
+    public String getMajor() {
+        return Major;
+    }
+
+    public void setMajor(String major) {
+        Major = major;
+    }
+
+    public String getCourse() {
+        return Course;
+    }
+
+    public void setCourse(String course) {
+        Course = course;
+    }
+
+    @Override
+    public void getScore() {
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+
+    public String toString() { //学生信息
+        return "\t\t" + this.No + "\t\t" + this.Name + "\t\t" + this.Sex + "\t\t" + this.Age + "\t\t"
+                + this.Major + "\t\t" + this.Course + "\t\t" + this.score;
+    }
+}
+
+
+class Undergraduate extends Student {
+
+    public void getScore() {
+        int grade = score;
+        switch (grade / 10) {
+            case 9:
+            case 8: {
+                System.out.println("优秀");
+                break;
+            }
+            case 7: {
+                System.out.println("良好");
+                break;
+            }
+            case 6: {
+                System.out.println("一般");
+                break;
+            }
+            case 5: {
+                System.out.println("及格");
+                break;
+            }
+            default: {
+                System.out.println("不及格");
+                break;
+            }
+        }
+    }
+}
+
+class Postgraduate extends Student {
+    Postgraduate(String name, String sex, int age, String major, String course, int score) {
+        this.Name = name;
+        this.Sex = sex;
+        this.Age = age;
+        this.Major = major;
+        this.Course = course;
+        this.score = score;
+    }
+
+    public void getScore() {
+        int grade = score;
+        switch (grade / 10) {
+            case 9: {
+                System.out.println("优秀");
+                break;
+            }
+            case 8: {
+                System.out.println("良好");
+                break;
+            }
+            case 7: {
+                System.out.println("一般");
+                break;
+            }
+            case 6: {
+                System.out.println("及格");
+                break;
+            }
+            default: {
+                System.out.println("不及格");
+                break;
+            }
+        }
+    }
+}
+
+
+class function {
+
+    public void menu() {
+        System.out.println("------->>学生信息系统<<--------");
+        System.out.println("--------1.增加本科生学生信息--------");
+        System.out.println("--------2.增加研究生学生信息--------");
+        System.out.println("--------3.查询本科生成绩等级--------");
+        System.out.println("--------4.查询研究生成绩等级--------");
+        System.out.println("--------0.退出操作--------");
+    }
+
+    public int xuehao(Student[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == null) {
+                return i;//新学生的编号
+            }
+        }
+        return 100; //学生已满员
+    }
+
+    public void printinfo1() {
+        System.out.println("\t\t学号\t\t姓名\t性别\t年龄\t学 历\t\t课程\t\t总分");
+    }
+
+    public void printinfo2(Student[] str1) {
+        for (Student student : str1) {
+            if (student != null)
+                System.out.println(student);
+        }
+    }
+
+    public void zengjiaxuesheng(String name, String sex, int age, String major, String course, int score, Student[] str1) {
+        int index = xuehao(str1);
+        Student str2 = new Undergraduate() {
+        };
+        str2.setName(name);
+        str2.setSex(sex);
+        str2.setAge(age);
+        str2.setMajor(major);
+        str2.setCourse(course);
+        str2.setScore(score);
+
+        str1[index] = str2;
+        System.out.println("添加学生成功");
+        this.printinfo1();
+        this.printinfo2(str1);
+    }
+
+}
+
+
+
+
+
+
+
+
+

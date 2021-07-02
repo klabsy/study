@@ -1,0 +1,88 @@
+package javaapplication5;
+
+import java.util.Scanner;
+
+public class Test 
+{             
+    public static void main(String[] args)
+    {
+        Scanner sc=new Scanner(System.in);
+        
+        int No , age ;         
+        float average;
+        String sName , sSex;
+        float sJava ;
+        
+        System.out.println("请输入学生学号：");
+        No = sc.nextInt();
+        System.out.println("请输入学生年龄：");
+        age = sc.nextInt();
+        System.out.println("请输入学生姓名：");
+        String name=sc.next();
+        System.out.println("请输入学生姓别：");
+        String sex=sc.next();
+        System.out.println("请输入学生java成绩：");
+        float java=sc.nextInt();
+        
+        Student stu_1; 
+        stu_1 = new Student(No,age,name,sex, (float) java);
+               
+        stu_1.getName();
+        stu_1.getNo();
+        stu_1.getSex();
+        stu_1.getAge();
+        stu_1.getJava();
+        
+        System.out.println("请输入学生学号：");
+        No = sc.nextInt();
+        System.out.println("请输入学生年龄：");
+        age = sc.nextInt();
+        System.out.println("请输入学生姓名：");
+        name=sc.next();
+        System.out.println("请输入学生姓别：");
+        sex=sc.next();
+        System.out.println("请输入学生java成绩：");
+        java=sc.nextInt();
+        
+        Student stu_2; 
+        stu_2 = new Student(No,age,name,sex, (float) java); 
+        stu_2.getName();
+        stu_2.getNo();
+        stu_2.getSex();
+        stu_2.getAge();
+        stu_2.getJava();
+        
+        average = (stu_1.sJava +stu_2.sJava)/2;
+        System.out.println("两个学生Java语言成绩的平均值:" + average);
+    }
+}
+   class Student {        //类定义
+   int sNo , sAge ;	
+   String sName , sSex;
+   float sJava ;
+   Student(int No ,int age , String name ,String sex ,float java )
+   {
+       sNo = No ; sAge = age; sName = name ; sSex = sex ; sJava = java ;
+   }
+   void getName()
+   {
+       System.out.println("姓名：" + sName);
+   }
+   void getNo()
+   {
+       System.out.println("学号：" + sNo);
+   }
+
+    void getSex()
+    {
+        System.out.println("姓别：" + sSex);
+    }
+    void getAge()
+    {
+        System.out.println("年龄：" + sAge);
+    }
+    void getJava()
+    {
+        System.out.println("java课程成绩：" + sJava);
+    }
+           }

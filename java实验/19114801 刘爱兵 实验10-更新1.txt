@@ -1,0 +1,103 @@
+package com.company;
+
+import java.util.Scanner;
+
+abstract class Xingzhuang{
+    public double zhouchang() {
+        return 0;
+    }
+    public Xingzhuang() {
+        super();
+    }
+}
+
+//设计Yuanxing类
+class Yuanxing extends Xingzhuang{
+    private double radius;
+    public Yuanxing(double radius) {
+        this.radius = radius;
+    }
+    @Override
+    public double zhouchang() {
+        return 2 * Math.PI * radius;
+    }
+}
+
+//设计Juxing类
+class Juxing extends Xingzhuang{
+    private double h;
+    private double w;
+    public Juxing(double h, double w) {
+        this.h = h;
+        this.w = w;
+    }
+
+    @Override
+    public double zhouchang() {
+        return 2 * (h + w);
+    }
+}
+
+//设计Sanjiaoxing类
+class Sanjiaoxing extends Xingzhuang{
+    private double x;
+    private double y;
+    private double z;
+
+    public Sanjiaoxing(double x, double y,double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+    @Override
+    public double zhouchang() {
+        return x + y + z;
+    }
+}
+
+
+class Exam{
+    public static void compute( Xingzhuang x){
+        System.out.println( "周长=" + x.zhouchang() );
+    }
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        int xuanze;
+        do{
+            System.out.println("输入形状：1.矩形 2.三角形 3.圆 0.退出");
+
+            xuanze = sc.nextInt();
+            switch (xuanze){
+                case 1:{
+                    System.out.println( "矩形周长:" );
+                    System.out.print("输入矩形的长宽:");
+                    double longth = sc.nextDouble();
+                    double withtd = sc.nextDouble();
+                    Xingzhuang juxing = new Juxing(longth,withtd);
+                    compute(juxing);break;
+                }
+                case 2:{
+                    System.out.print("输入三角形的三边:");
+                    double a = sc.nextDouble();
+                    double b = sc.nextDouble();
+                    double c = sc.nextDouble();
+                    if(a+b>c&&a+c>b&&b+c>a){
+                        System.out.println( "三角形形周长:" );
+                        Xingzhuang Sanjiaoxing = new Sanjiaoxing(a,b,c);
+                        compute(Sanjiaoxing);
+                        break;
+                    }
+                    System.out.println("你输入的不能构成三角形");break;
+                }
+                case 3:{
+                    System.out.print("输入圆的半径：");
+                    double r = sc.nextDouble();
+                    System.out.println( "圆的周长:" );
+                    Xingzhuang Yuanxing  = new Yuanxing(r);
+                    compute(Yuanxing);break;
+                }
+            }
+        }while(xuanze!=0);
+    }
+}
+

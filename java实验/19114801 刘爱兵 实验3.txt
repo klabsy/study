@@ -1,0 +1,117 @@
+import java.util.Scanner;
+
+public class Test 
+{             
+    public static void main(String[] args)
+    {
+        int number;
+        Scanner sc=new Scanner(System.in);
+        int No , age ;         
+        float average;
+        String Name , sSex;
+        float sJava ;
+        //输入学生信息
+        Student []stu = new Student[2];
+        for(int i=0; i < stu.length; i++){
+        System.out.println("请输入学生学号：");
+        No = sc.nextInt();
+        System.out.println("请输入学生年龄：");
+        age = sc.nextInt();
+        System.out.println("请输入学生姓名：");
+        String name=sc.next();
+        System.out.println("请输入学生姓别：");
+        String sex=sc.next();
+        System.out.println("请输入学生java成绩：");
+        float java=sc.nextInt();
+        //输出刚写入学生信息
+        stu[i] = new Student(No,age,name,sex, (float) java);
+        stu[i].stu_information();      
+        }
+        do{
+        System.out.println("----请选择查询学生信息的方式----");
+        System.out.println("----1:学号查询----");
+        System.out.println("----2:姓名查询----");
+        System.out.println("----输入0退出----");
+        System.out.println("请选择：");
+        
+        number = sc.nextInt();
+        if(number >2){
+            System.out.print("无此功能，请重新输入");}
+        else{
+            switch (number) {
+                case 1:
+                     System.out.print("请输入学生学号：");
+                     int x = sc.nextInt();
+                     Student.find_No(x, stu);
+                    break;
+                case 2:
+  		   System.out.print("请输入学生姓名：");
+                     sc.nextLine();
+                     String y = sc.nextLine();
+                     Student.find_Name(y, stu);
+                    break;	
+                    
+                    }
+                }
+        }while (number!=0);
+        System.out.println("查询结束");
+    }
+    }
+
+
+   class Student 
+   {        
+   int sNo , sAge ;	
+   String sName , sSex;
+   float sJava ;
+
+    Student(int No ,int age , String name ,String sex ,float java )
+   {
+       sNo = No ; sAge = age; sName = name ; sSex = sex ; sJava = java ;
+   }
+   String getName()
+   {
+       return( sName );
+   }
+   int getNo()
+   {
+      return (sNo);
+   }
+
+    String getSex()
+    {
+        return( sSex);
+    }
+    int getAge()
+    {
+        return (sAge);
+    }
+    float getJava()
+    {
+        return(sJava); }
+    void stu_information(){
+    System.out.println ("学号:" + sNo + " 姓名:" + sName + " 性别:" + sSex + " 年纪:" + sAge + " 成绩:" + sJava);
+    }
+    
+    public static void find_No(int id, Student[] stu)
+    {   int flag = 0;
+        for (int i = 0; i < stu.length; i++) 
+        {       
+                if (id == stu[i].getNo()) 
+                { stu[i].stu_information(); flag = 1; break; }
+        }       
+        if(flag ==0)
+                { System.out.println("输入学号不存在");}
+    }
+    public static void find_Name(String d, Student[] stu) 
+    {
+          int z=0;       
+         for (int i = 0; i < stu.length; i++) 
+         {      
+                if (d.equals(stu[i].getName())) 
+                {stu[i].stu_information();z++;}
+         }
+                if (z == 0)
+                {System.out.println("输入姓名不存在");}
+    }
+   }

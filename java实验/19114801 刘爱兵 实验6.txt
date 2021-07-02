@@ -1,0 +1,78 @@
+public class characterprint {
+    public static void main(String[] args) {
+        System.out.println("-----打印字母A-----");
+        characterprint.A();
+        System.out.println("-----打印字母K-----");
+        characterprint.K();
+        System.out.println("------打印字母Y-----");
+        characterprint.Y();
+        System.out.println("--------------------");
+        
+    }
+
+  public static void A(){ 
+      int width=13;
+        int height=width/2;
+        for (int i=0;i<height;i++){
+            for (int j=0;j<width;j++){
+                
+                if (i==((height+1)/2)){      
+                        if (j<width/2-i || j>width/2+i)
+                             { System.out.print(" "); }
+                        else { System.out.print("*");}
+                }
+                else{   if (j == width/2+i||j == width/2-i)
+                           {System.out.print("*"); }
+                        else {System.out.print(" "); }
+                }
+            }
+            System.out.println(" ");
+        }
+    }
+  
+  public static void K(){
+      int width=4;
+        int height=5;
+        for (int i=0;i<height;i++){
+            for (int j=0;j<width;j++){
+                if(i<=(height/2)){
+                    if(j==0||j==width-i-1)  {
+                        System.out.print("*");}
+                    else {
+                        System.out.print(" ");}
+                }
+                    
+                else {  if(j==0||j==i-1){
+                                System.out.print("*");}
+                        else {
+                                System.out.print(" ");}
+                }
+                    
+            }
+            System.out.println(" ");
+            }
+        }
+  
+  public static void Y(){
+   int width=5;
+   int height=5;
+         for (int i=0;i<height;i++){
+             for (int j=0;j<width;j++){
+                 
+                if (i>=((height-1)/2)){      
+                        if (j==(height-1)/2){  
+                            System.out.print("*");}
+                        else {
+                            System.out.print(" ");}
+                }
+                else {
+                    if (j == i||j == width-i-1){    
+                    System.out.print("*"); }
+                    else { System.out.print(" "); }
+                     }
+             }
+            System.out.println(" ");
+        
+         }
+     }
+}

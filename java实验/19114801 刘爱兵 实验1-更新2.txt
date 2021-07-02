@@ -1,0 +1,59 @@
+import java.util.* ;
+public class Test {           	   //类“Test”（主类）
+  public static void main(String[] args){
+      int X ,Y , number ; 
+      do{ 
+        System.out.println("请输入待计算X:");
+        Scanner sc= new Scanner(System.in);
+        X = sc.nextInt();
+        System.out.println("请输入待计算Y:");
+        Y = sc.nextInt();
+     Cal cal = new Cal( X , Y ) ;
+        System.out.println("----请选择运算方式----");
+        System.out.println("----1:加法----");
+        System.out.println("----2:减法----");
+        System.out.println("----3:乘法----");
+        System.out.println("----4:除法----");
+        System.out.println("----输入0退出----");
+        System.out.println("请选择：");
+        number = sc.nextInt();
+                if(number >4){
+            System.out.print("无此功能，请重新输入");}
+        else{
+            switch (number) {
+                case 1:
+                    System.out.println(" X + Y = " + cal.add()); 		//加法
+                    break;
+                case 2:
+                    System.out.println(" X - Y = "  + cal.sub());  		//减法
+                    break;	
+                case 3:
+                    System.out.println(" X * Y = "  +  cal.mul());  		//乘法
+                    break;
+                case 4:
+                    if( Y == 0 ){
+                     System.out.print("分母不能为0，请重新输入");}		//除法
+                    else{
+                        System.out.println(" X / Y = " + cal.div());
+                        break; }
+                    }
+                }
+        }while (number!=0);
+    }
+  }
+class Cal {      	  //类定义
+   int  x,y  ;
+   Cal(int  a, int b)	   //构造函数
+   {    x=a ;
+        y=b ;
+   }
+    int add()          	 //方法1
+    { return x+y;}
+    int sub()      	//方法2
+    { return x-y;}
+    int mul()   	//方法3
+    { return x*y;}
+    int div()   	 //方法4
+    { return x/y; }
+           }
+
