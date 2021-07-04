@@ -1,0 +1,81 @@
+//时间复杂度O(n);
+#include<stdio.h>
+#include<stdlib.h>
+#define MAXSIZE 100
+
+typedef struct{
+	char data[MAXSIZE];
+	int lenth;
+}*Str;
+
+void init(Str &s){
+	s = (Str)malloc(sizeof(Str));
+	for(int i = 0; i < MAXSIZE; i++){
+		s->data[i] = '\0';
+	}
+	s->lenth = 0;
+}
+
+void assign(Str &s, char a[]){
+	int i = 0;
+	while(a[i] != '\0'){
+		s->data[i] = a[i];
+		s->lenth++;
+		i++;
+	}
+	printf("成功\n");
+}
+
+void clear(Str &s){
+	for(int i = 0; i < MAXSIZE; i++){
+		s->data[i] = '\0';
+	}
+	s->lenth = 0;
+}
+
+void display(Str &s){
+	int i = 0;
+	while(s->data[i] != '\0'){
+		printf("%c", s->data[i]);
+		i++;
+	}
+	printf("\n");
+}
+
+void substr(Str &s){
+	int i=0, len=1, maxlen=1;
+	int j=0;
+	int index = 1, flag;
+	char c[MAXSIZE];
+	while(s->data[i] != '\0'){
+		while(s->data[i] == s->data[i+1]){
+			len++;
+			i++;
+		}
+		if(len > maxlen){
+			flag = i;
+			index = flag - len + 2;
+			maxlen = len;
+			len = 1;
+		}
+		i++;
+	}
+	for(i = index - 1; i < index + maxlen - 1; i++){
+		printf("%c", s->data[i]);
+	}
+	printf("\n");
+	printf("INDEX IS %d\n", index);
+	printf("MAXLENTH IS %d\n", maxlen);
+}
+
+int main(){
+	Str s;
+	init(s);
+	char c[MAXSIZE];
+	printf("请输入：\n");
+	scanf("%s", &c);
+	assign(s, c);
+	display(s);
+	substr(s);
+	return 0;
+}

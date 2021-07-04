@@ -1,0 +1,215 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MaxSize 100
+
+//符号栈 
+typedef struct{
+	char stkdata[MaxSize];
+	int top;
+}STKzone;
+//初始化符号栈顶
+void Initstk(STKzone *&s){
+	s=(STKzone *)malloc(sizeof(STKzone));
+	s->top=-1;
+}
+//判断栈顶符号元素
+bool stkEmpty(STKzone *s){
+	return(s->top==-1);
+}
+//弹出栈顶符号元素
+bool Push(STKzone *&s,char e){
+	if(s->top==MaxSize-1)
+		return false;
+	s->top++;
+	s->stkdata[s->top]=e;
+	return true;
+}
+//弹出栈顶符号元素
+bool Pop(STKzone *&s,char &e){
+	if(s->top==-1)
+		return false;
+	e=s->stkdata[s->top];
+	s->top--;
+	return true;
+}
+//获得栈顶符号元素
+bool GetTop(STKzone *s,char &e){
+	if(s->top==-1)
+		return false;
+	e=s->stkdata[s->top];
+	return true;
+}
+//毁栈
+void Destroystk(STKzone *&s){
+	free(s);
+}
+
+//定义数字栈 
+typedef struct{
+	double stkdata[MaxSize];
+	int top;
+}STKzone1;
+//初始化数字栈
+void Initstk1(STKzone1 *&s){
+	s=(STKzone1 *)malloc(sizeof(STKzone1));
+	s->top=-1;
+}
+//判断数字栈是否为空
+bool stkEmpty1(STKzone1 *s){
+	return(s->top==-1);
+}
+//数字元素入栈
+bool Push1(STKzone1 *&s,double e){
+	if(s->top==MaxSize-1)
+		return false;
+	s->top++;
+	s->stkdata[s->top]=e;
+	return true;
+}
+//弹出栈顶数字元素
+bool Pop1(STKzone1 *&s,double &e){
+	if(s->top==-1)
+		return false;
+	e=s->stkdata[s->top];
+	s->top--;
+	return true;
+}
+//获取栈顶数字元素
+bool GetTop1(STKzone1 *s,double &e){
+	if(s->top==-1)
+		return false;
+	e=s->stkdata[s->top];
+	return true;
+}
+
+//销毁栈
+void Destroystk1(STKzone1 *&s){
+	free(s);
+}
+
+//将算术表达式a转换成后缀表达式posta 
+void trans(char *a,char posta[]){		
+	char e;
+	STKzone *Optr;
+	Initstk(Optr);
+	int i=0;
+	while(*a != '\0'){
+		switch(*a){
+			case'(':
+				Push(Optr,'(');
+				a++;
+				break;
+			case')':
+				Pop(Optr,e);
+				while(e != '('){
+					posta[i++]=e;
+					Pop(Optr,e);
+				}
+				a++;
+				break;
+			case'+':
+			case'-':
+				while(!stkEmpty(Optr)){
+					GetTop(Optr,e);
+					if(e!='('){
+						posta[i++]=e;
+						Pop(Optr,e);
+					}
+					else
+						break;
+				}
+				Push(Optr,*a);
+				a++;
+				break;
+			case'*':
+			case'/':
+				while(!stkEmpty(Optr)){
+					GetTop(Optr,e);
+					if(e=='*' || e=='/'){
+						posta[i++]=e;
+						Pop(Optr,e);
+					}
+					else
+						break;
+				}
+				Push(Optr,*a);
+				a++;
+				break;
+			default:
+				while(*a>='0' && *a<='9'){
+					posta[i++]=*a;
+					a++;
+				}	
+				posta[i++]=',';
+		}
+	}
+	while(!stkEmpty(Optr)){
+		Pop(Optr,e);
+		posta[i++]=e;
+	}
+	posta[i]='\0';
+	Destroystk(Optr);
+}
+//计算后缀表达式的值 
+double compvalue(char *posta){		
+	double a,d,b,c,e;
+	STKzone1 *Opnd;
+	Initstk1(Opnd);
+	while(*posta != '\0'){
+		switch(*posta){
+			case'+':
+				Pop1(Opnd,a);
+				Pop1(Opnd,b);
+				c=b+a;
+				Push1(Opnd,c);
+				break;
+			case'-':
+				Pop1(Opnd,a);
+				Pop1(Opnd,b);
+				c=b-a;
+				Push1(Opnd,c);
+				break;
+			case'*':
+				Pop1(Opnd,a);
+				Pop1(Opnd,b);
+				c=b*a;
+				Push1(Opnd,c);
+				break;
+			case'/':
+				Pop1(Opnd,a);
+				Pop1(Opnd,b);
+				if(a!=0){
+					c=b/a;
+					Push1(Opnd,c);
+					break;}
+				else{
+					printf("\n\t除零错误!\n");
+					exit(0);
+				}
+				break;
+			default:
+				d=0;
+				while(*posta>='0' && *posta<='9'){
+					d=10*d+*posta-'0';
+					posta++;
+				}
+				Push1(Opnd,d);
+				break;
+		}
+		posta++;
+	}
+	GetTop1(Opnd,e);
+	Destroystk1(Opnd);
+	return e;
+}
+int main(){
+	char a[MaxSize];
+	printf("请输入一个中缀表达式:\n");
+	scanf("%s",a);
+	char posta[MaxSize];
+	trans(a,posta);
+	printf("转变为后缀表达式：%s\n",posta);
+	printf("表达式的值：%g\n",compvalue(posta));
+	return 0; 
+}

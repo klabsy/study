@@ -1,0 +1,38 @@
+实验：
+    实现一元多项式相加
+要求：
+    对任意输入按指数递增排序
+    
+
+void  add_poly(JD *pa,JD *pb){   
+    JD *p,*q,*u,*pre;
+    int x;
+    p = pa->next;
+    q = pb->next;
+    pre = pa;
+    while(( p ! = NULL ) && (( q ! = NULL )){  
+       if ( p->exp < q->exp ){ 
+            pre = p;  p = p->next; 
+          }
+      else if ( p->exp == q->exp ){ 
+            x = p->coef + q->coef;
+            if ( x ! = 0 ) { p->coef = x;  pre = p; }
+            else {  pre->next = p->next; 
+                        free(p); 
+                    }          
+            p = pre->next;
+            u=q;
+            q=q->next;
+            free(u);
+          }
+      else{   
+            u=q->next;
+            q->next=p;
+             pre->next=q;
+             pre=q;  q=u;
+           }
+    }
+    if ( q ! = NULL)
+       pre->next=q;
+    free(pb);
+}

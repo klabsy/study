@@ -1,0 +1,86 @@
+#include<stdio.h>
+#include <math.h>
+
+#define mxn 100+10
+#define mx 1e108
+
+int n;
+int x[mxn],y[mxn];
+double mp[mxn][mxn];
+double ds[mxn],nc[mxn];
+
+double ck(int x,int y,int s,int t)
+{
+    return sqrt((x-s)*(x-s)+(y-t)*(y-t));
+}
+
+void prim()
+{
+    ds[1]=0;
+    for (int i=2;i<=n;++i)
+    {
+        ds[i]=mp[1][i];
+        nc[i]=1;
+    }
+
+    double tot=0;
+    for (int i=1;i<=n-1;i++)
+    {
+        double min=mx;
+        int nd=0;
+        for (int j=1;j<=n;++j)
+            if (ds[j]&&min>ds[j])
+            {
+                min=ds[j];
+                nd=j;
+            }
+
+        if (nd==0) break;
+
+        tot+=min;
+        ds[nd]=0;
+
+        for (int j=1;j<=n;++j)
+            if (ds[j]&&ds[j]>mp[nd][j])
+            {
+                ds[j]=mp[nd][j];
+                nc[j]=nd;
+            }
+    }
+
+    printf("最小费用为:%.2lf",tot);
+}
+
+int main()
+{
+    printf("请输入一个整数 N(N<=100)，表示区域内城市的数目：");
+    scanf("%d",&n);
+    for (int i=1;i<=n;++i)
+    {
+        printf("输入第%d城市的坐标:",i);
+        scanf("%d%d",x+i,y+i);
+    }
+
+    for (int i=1;i<=n;++i)
+        for (int j=1;j<=n;++j)
+        {
+            mp[j][i]=mp[i][j]=ck(x[i],y[i],x[j],y[j]);
+        }
+
+    prim();
+
+
+    return 0;
+}
+/*
+测试用例
+4
+1 1
+1 3
+2 2
+3 1
+
+输出：4.24  (即3倍根号2)
+*/
+
+

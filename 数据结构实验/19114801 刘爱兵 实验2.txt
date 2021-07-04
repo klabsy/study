@@ -1,0 +1,315 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+typedef struct Books {
+	char book_number[20];
+	char book_name[20];
+	double book_price;
+	struct Books *next;
+}Book, *Linklist;
+
+
+//图书信息表创建
+Linklist info_input(Book *L) {
+	Book *p, *q;
+	Book *cur;//用于遍历的指针
+	cur = L->next;
+	int mark;//用于判断是否存书
+	int n, i;
+	q = L;
+	printf("请输入你要录入书本的数量:\n");
+	scanf("%d", &n);
+	for (i = 0; i < n; i++)
+	{
+		p = (Book *)malloc(sizeof(struct Books));
+		printf("请输入书号\t书名\t价格:\n");
+		scanf("%s%s%lf", p->book_number, p->book_name, &p->book_price);
+		mark = 0;
+		while (cur != NULL)
+		{
+			if (strcmp(p->book_number, cur->book_number) == 0) {
+				printf("此书已经存在！\n"); mark = 1;
+			}
+			cur = cur->next;
+		}
+		if (mark == 0) {
+			q->next = p;
+			q = p;
+			printf("录入成功！\n");
+		}
+	}
+	q->next = NULL;
+	return L;
+}
+
+//图书信息表的输出
+void info_output(Book *L) {
+	Book *cur;//用于遍历的指针
+	cur = L->next;
+	int num = 0;//记录图书数量
+	printf("图书信息:书号\t书名\t价格\n");
+	while (cur != NULL) {
+		printf("\t%s\t%s\t%0.2lf\n", cur->book_number, cur->book_name, cur->book_price);
+		cur = cur->next; num++;
+	}
+	printf("图书总计%d本!\n", num);
+}
+//图书信息表的排序
+void info_sort(Book *L) {
+	Book *cur, *tail, *p;//用于遍历的指针
+	p = L->next;
+	double t; char temp[20];
+	printf("%d",tail);
+	while (p!= NULL) {
+		flag = 0;
+		cur = L->next;
+		while (cur->next!= NULL)
+		{
+			if (cur->book_price <= cur->next->book_price) {
+				//书名交换
+				strcpy(temp, cur->book_name);
+				strcpy(cur->book_name, cur->next->book_name);
+				strcpy(cur->next->book_name, temp);
+				//书号交换
+				strcpy(temp, cur->book_number);
+				strcpy(cur->book_number, cur->next->book_number);
+				strcpy(cur->next->book_number, temp);
+				//书本价格交换
+				t = cur->book_price;
+				cur->book_price = cur->next->book_price;
+				cur->next->book_price = t;
+	
+			}
+			cur = cur->next;
+		}
+		p=p->next;
+	}
+	//info_output(L);
+	printf("图书信息按价格从大到小排序完毕！如下:\n");
+	printf("图书信息:书号\t书名\t价格\n");
+	cur = L->next;
+	while (cur != NULL) {
+		printf("\t%s\t%s\t%.2f\n", cur->book_number, cur->book_name, cur->book_price);
+		cur = cur->next;
+	}
+}
+//图书信息表的修改
+void info_set(Book *L) {
+	int n = 0; double sum = 0;
+	Book *cur = L->next;
+	double average;
+	//求和算出图书价格总和
+	while (cur != NULL) {
+		sum += cur->book_price;
+		n++;
+		cur=cur->next;
+	}
+	printf("ss");
+	average = sum / n;
+	cur = L->next;
+	//按价格进行不同提高
+	while (cur != NULL) {
+		if (cur->book_price < average) {
+			cur->book_price = cur->book_price*1.2;
+		}
+		else { cur->book_price = cur->book_price*1.1; }
+		cur=cur->next;
+	}
+
+	printf("所有图书的平均价格为:%.2f\n", average);
+	printf("图书信息:书号\t书名\t价格\n");
+	cur = L->next;
+	while (cur != NULL) {
+		printf("\t%s\t%s\t%.2f\n", cur->book_number, cur->book_name, cur->book_price);
+		cur = cur->next;
+	}
+}
+//图书的逆序存储
+void info_reverse(Book *L) {
+	Linklist q, p,cur;
+	p = L->next;
+	L->next=NULL;
+	while (p != NULL)
+	{
+		q = p;
+		p = p->next;
+		q->next = L->next;
+		L->next = q;
+	}
+	cur = L->next;
+	while (cur != NULL) {
+		printf("\t%s\t%s\t%.2f\n", cur->book_number, cur->book_name, cur->book_price);
+		cur = cur->next;
+	}
+}
+//最贵图书的查找
+void search_price(Book *L) {
+	double price = 0;
+	int n = 0;
+	Linklist cur = L->next;
+	price =cur->book_price;
+	while (cur != NULL) {
+		if (price <= cur->book_price) {
+			price = cur->book_price;	
+		}
+		cur = cur->next;
+	}
+	
+	cur = L->next;
+	while (cur != NULL) {
+		n++;
+		if (cur->book_price == price) {
+			printf("这是第%d书\n", n);
+			printf("\t%s\t%s\t%.2f\n", cur->book_number, cur->book_name, cur->book_price);
+		}
+		cur = cur->next;
+	}
+}
+//最爱图书的查找
+void search_name(Book *L) {
+	char name[20][20];
+	int num, i, j, flag = 0;
+	printf("输入你要查找的图书数量:\n");
+	scanf("%d", &num);
+	printf("输入你要查找的图书书名:\n");
+	for (i = 0; i < num; i++) {
+		scanf("%s", name[i]);
+	}
+	Linklist cur;
+	cur = L->next;
+	while (cur != NULL) {
+		for (j = 0; j < num; j++) {
+			if (!strcmp(cur->book_name, name[j])) {
+				printf("太好了,找到你想要的书了\n");
+				printf("图书信息:书号\t书名\t价格\n");
+				printf("\t%s\t%s\t%.2f\n", cur->book_number, cur->book_name, cur->book_price);
+				flag = 1;
+			}
+		}
+		cur = cur->next;
+	}
+	if (flag == 0) { printf("抱歉，没有你的最爱!\n"); }
+}
+//最佳位置图书的查找
+void search_position(Book *L) {
+	int i, p, j, length = 0;
+	Linklist cur = L->next;
+	while (cur != NULL) { cur = cur->next; length++; }
+	int num;
+	printf("请输入你需要查找的次数:");
+	scanf("%d", &num);
+	for (i = 0; i < num; i++) {
+		printf("请输入你需要查找的图书位置:");
+		scanf("%d", &p);
+		cur = L->next;
+		for (j = 0; j < p; j++) { cur = cur->next; }
+		p--;
+		if (p > length || p < 0) { printf("抱歉，最佳位置上的图书不存在！"); }
+		else {
+			printf("图书信息:书号\t书名\t价格\n");
+			printf("\t%s\t%s\t%.2f\n", cur->book_number, cur->book_name, cur->book_price);
+			cur = cur->next;
+		}
+	}
+}
+//新图书的入库
+void book_in(Book *L) {
+	int i, p;
+	Linklist cur = L->next, s, cu;
+	printf("请输入你要插入书本的位置:\n");
+	int flag = 0;
+	scanf("%d", &p);
+	p--;
+	//找到需要插入的位置
+	for (i = 1; cur != NULL && i < p; i++) {
+		cur = cur->next;
+	}
+	printf("图书信息:书号\t书名\t价格\n");
+	s = (Book *)malloc(sizeof(struct Books));
+	scanf("\t%s%s%2lf", s->book_number, s->book_name, &s->book_price);
+	printf("\t%s\t%s\t%.2f\n", s->book_number, s->book_name, s->book_price);
+	cu = L->next;
+	while (cu != NULL) {
+		if (strcmp(cu->book_number, s->book_number) == 0) { printf("此书已存在！\n"); flag = 1; }
+		cu = cu->next;
+	}
+	if (flag == 0) {
+		s->next = cur->next; cur->next = s;
+	}
+	printf("图书信息:书号\t书名\t价格\n");
+	cur = L->next;
+	while (cur != NULL) {
+		printf("\t%s\t%s\t%.2f\n", cur->book_number, cur->book_name, cur->book_price);
+		cur = cur->next;
+	}
+}
+//旧图书的出库
+void book_out(Book *L) {
+	int i, p = 0;
+	Linklist cur, s;
+	cur = L;
+	printf("请输入你要删除书本的位置:\n");
+	scanf("%d", &p);
+	for (i = 1; (cur != NULL) && (i < p); i++) {
+		cur = cur->next;
+	}
+	s = cur->next;
+	cur->next = s->next;
+	free(s);
+	printf("图书信息:书号\t书名\t价格\n");
+	cur = L->next;
+	while (cur != NULL) {
+		printf("\t%s\t%s\t%.2f\n", cur->book_number, cur->book_name, cur->book_price);
+		cur = cur->next;
+	}
+}
+
+void menu() {
+	printf("|————————0.菜单————————|\n");
+	printf("|1.图书信息表的创建\t2.图书信息表的输出\n");
+	printf("|3.图书信息表的排序\t4.图书信息表的修改\n");
+	printf("|5.图书的逆序存储\t6.最贵图书的查找\n");
+	printf("|7.最爱图书的查找\t8.最佳位置图书的查找\n");
+	printf("|9.新图书的入库\t10.旧图书的出库       \n");
+	printf("|——————---11.退出————————|\n");
+}
+
+int main() {
+	int k;
+	Linklist L;
+	//动态分配内存
+	L = (Book *)malloc(sizeof(struct Books));
+	L->next = NULL;
+	menu();
+	do {
+		printf("请输入你要执行的操作:");
+		scanf("%d", &k);
+		switch (k)
+		{
+		case 0:menu();
+			break;
+		case 1:L = info_input(L);
+			break;
+		case 2:info_output(L);
+			break;
+		case 3:info_sort(L);
+			break;
+		case 4:info_set(L);
+			break;
+		case 5:info_reverse(L);
+			break;
+		case 6:search_price(L);
+			break;
+		case 7:search_name(L);
+			break;
+		case 8:search_position(L);
+			break;
+		case 9:book_in(L);
+			break;
+		case 10:book_out(L);
+			break;
+		}
+	} while (k != 11);
+	return 0;
+}

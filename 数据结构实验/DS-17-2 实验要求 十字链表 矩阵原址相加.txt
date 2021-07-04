@@ -1,0 +1,154 @@
+2．以下例子采用的是新开辟c十字链表存放a矩阵和b矩阵之和，试用a存放a矩阵和b矩阵之和，改写下列例子。
+
+参考代码（十字链表 矩阵相加）
+#include "stdio.h"
+#include "malloc.h"
+typedef struct ele {		//十字链表结点类型
+	int row,col;
+	int val;
+	struct ele *right,*down;
+}eleNode;
+
+//建立一个元素全为零的稀疏矩阵的十字链表
+eleNode *createNullMat(int m,int n){			//m行n列
+	eleNode *h,*p;
+	int k;
+	h=(eleNode *)malloc(sizeof(eleNode));  	//十字链表头结点
+	h->row=m;
+	h->col=n;
+	h->val=0;			//行数、列数和非零元素个数
+	h->right=(eleNode *)malloc(sizeof(eleNode)*n);
+	h->down=(eleNode *)malloc(sizeof(eleNode)*m);
+	for(p=h->down,k=0;k<m;k++,p++){
+		p->col=1000;			//设矩阵不会超过1000列
+		p->right=p;			//每个行链表是一个环
+		p->down=k<m-1?p+1:h->down;		//使全部行链表头结点构成环
+	}
+	for(p=h->right,k=0;k<n;k++,p++){
+		p->row=1000;		//设矩阵不会超过1000行
+		p->down=p;		//每个列链表是一个环
+		p->right=k<n-1?p+1:h->right;	//使全部列链表头结点构成环
+	}
+	return h;
+}
+
+int insertNode(eleNode *a ,int row,int col,int val){	//在十字链表中插入一个结点
+	eleNode *p,*q,*r,*u,*v;
+	if(row>=a->row||col>=a->col)		//不合理的行列号
+		return -2; 
+	r=(eleNode *)malloc(sizeof(eleNode));
+	r->row=row;
+	r->col=col;
+	r->val=val;
+	p=a->down+row;
+	q=p->right;
+	while(q->col<col){
+		p=q;
+		q=q->right;
+	}
+	if(q->col==col)			//该行已有col列元素
+		return -1;
+	u=a->right+col;
+	v=u->down;
+	while(v->row<row){
+		u=v;
+		v=v->down;
+	}
+	if(v->row==row) 	return -1;		//该列已有row行元素
+	p->right=r; 	//插入到行链中
+	r->right=q;		
+	u->down=r; 	//插入到列链中
+	r->down=v;		
+	a->val=val;
+	return 0; 		//插入成功
+}
+
+eleNode *readMat(){		//输入数据建立十字链表
+	eleNode *h;
+	int i,j,m,n;
+	int v=0;
+	printf("输入稀疏矩阵的行数: "); 
+	scanf("%d",&m);
+	printf("输入稀疏矩阵的列数: "); 
+	scanf("%d",&n);
+	h=createNullMat(m,n);
+	printf("输入有非零元素的行号: ");
+	scanf("%d",&i);
+	while(i>=0){			//逐行输入非零元素
+		printf("输入非零元素的列号: ");
+		scanf("%d",&j);
+		while(j>=0){		//输入一行非零元素
+			printf("输入非零元素的值: ");
+			scanf("%d",&v);
+			insertNode(h,i,j,v);
+			printf("输入当前行下一个非零元素的列号（-1表示当前行数据结束）: ");
+			scanf("%d",&j);
+		}
+		printf("输入下一行有非零元素的行号（-1表示输入结束）: ");
+		scanf("%d",&i);
+	}
+	return h;
+}
+
+eleNode *matAdd(eleNode *a,eleNode *b){
+	eleNode *r,*p,*q,*u,*v;
+	r=createNullMat(a->row,a->col);
+	p=a->down;
+	u=b->down;
+	do{	//逐行相加
+		q=p->right;
+		v=u->right;
+		while(q!=p||v!=u)		//两矩阵中有一个一行未结束循环
+			if(q->col==v->col){	//有相同列的元素
+				if(q->val+v->val!=0)	//和非零插入
+					insertNode(r,q->row,q->col,q->val+v->val);
+				q=q->right;
+				v=v->right;
+			}
+			else 
+				if(q->col<v->col){		//插入a的元素
+					insertNode(r,q->row,q->col,q->val);
+					q=q->right;
+				}
+				else{		//插入b的元素
+					insertNode(r,v->row,v->col,v->val);
+					v=v->right;
+				}
+				p=p->down;
+				u=u->down;
+	}while(p!=a->down);
+	return r;
+}
+
+void showMat(eleNode *a){
+	int row,col,i,j;
+	eleNode *p,*q;
+	row=a->row;
+	col=a->col;
+	for(i=0;i<row;i++){
+		p=a->down+i;
+		q=p->right;		
+		for(j=0;j<col;j++){			
+			if(q->row==i&&q->col==j){				
+				printf("%d  ",q->val);
+				q=q->right;
+			}
+			else
+				printf("0  ");
+		}
+		printf("\n");
+	}
+}
+
+void main(){
+	eleNode *a,*b,*c;
+	a=readMat();
+	printf("\na矩阵: \n");
+	showMat(a);
+	b=readMat();
+	printf("\nb矩阵: \n");
+	showMat(b);
+	c= matAdd(a,b);
+	printf("\nc矩阵（=a矩阵与b矩阵中具有相同行数和列数的数值相加）: \n");
+	showMat(c);
+}

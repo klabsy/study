@@ -1,0 +1,11 @@
+ 
+问题描述:   1）建立广义表算法库，包括：  
+            ① 头文glist.h，定义数据类型，声明函数；  
+            ② 源文件glist.cpp，实现广义表的基本运算，主要算法包括： 
+            int GLLength(GLNode *g);    //求广义表g的长度 
+            int GLDepth(GLNode *g);     //求广义表g的深度 
+            GLNode *CreateGL(char *&s); //返回由括号表示法表示s的广义表链式存储结构 
+            void DispGL(GLNode *g);     //输出广义表g 
+            ③ 设计main函数，测试上面实现的算法  
+输入描述：   若干测试数据。 
+程序输出：  广义表的深度。 

@@ -1,0 +1,144 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+    typedef struct Node//结构体  
+    {
+    	char data;
+		int ltag,rtag;
+    	struct Node *LChild;
+    	struct Node *RChild;
+    } BiTNode,*BiTree;
+    
+BiTree pre;
+BiTree CreateBiTree(){
+    char ch;
+    BiTree BT;
+    scanf("%c", &ch);
+    if (ch=='#'){
+        return NULL;
+    }	 
+    else{
+        BT=(BiTree)malloc(sizeof(BiTNode));
+        BT->data=ch;
+        BT->ltag=0;
+        BT->rtag=0;
+        BT->LChild=NULL;
+        BT->RChild=NULL;
+        BT->LChild=CreateBiTree();
+        BT->RChild=CreateBiTree();
+        return BT;
+    }	 
+}
+
+
+
+void Thread(BiTree BT){
+	if(BT!=NULL){
+		Thread(BT->LChild);
+		if(BT->LChild==NULL){
+			BT->LChild=pre;
+			BT->ltag=1; 
+		}
+		else
+			BT->ltag=0;
+		if(pre->RChild==NULL){
+			pre->RChild=BT;
+			pre->rtag=1; 
+		}
+		else
+			pre->rtag=0;
+		pre=BT;
+		Thread(BT->RChild);
+	} 
+}
+
+BiTree CreateThread(BiTree BT){
+	BiTree root;
+	root=(BiTree)malloc(sizeof(BiTNode));
+	root->ltag=0;
+	root->rtag=1;
+	root->RChild=BT;
+	if(BT==NULL)
+		root->LChild=root;
+	else{
+		root->LChild=BT;
+		pre=root;
+		Thread(BT);
+		pre->RChild=root;
+		pre->rtag=1;
+		root->RChild=pre;
+	}
+	return root;
+}
+
+ 
+BiTree BiSearchPre(BiTree BT){
+    BiTree pre;
+    pre=BT->LChild;
+    if(BT->ltag!=1){
+        while(pre->rtag==0)
+            pre=pre->RChild;
+    }
+    return pre;
+}
+ 
+//找前驱方式
+char c[7]; 
+void InOrderPre(BiTree BT){
+	int i=0;
+    BiTree p;
+    p=BT->RChild;
+    while(p!=NULL&&p!=BT){
+    	c[i]=p->data;
+        i++;
+        p=BiSearchPre(p);
+    }
+}
+
+
+BiTree inBiSearchPost(BiTree BT){
+    BiTree post;
+    post=BT->RChild;
+    if(BT->rtag != 1){
+        while(post->ltag==0)
+            post=post->LChild;
+    }
+    return post;
+}
+ 
+//找后继方式
+void InOrderPost(BiTree BT){
+    BiTree p;
+    p=BT->LChild;
+    while(p->ltag!=1){
+        p=p->LChild;
+    }
+    while(p!=NULL&&p!=BT){
+        printf("%c ",p->data); 
+        p=inBiSearchPost(p);
+    }
+}
+
+int main(){
+	BiTree BT;
+	int i;
+	printf("先序遍历创建二叉树:");
+	BT=CreateBiTree();
+	printf("先序创建成功！\n");
+
+	BT=CreateThread(BT);
+	printf("中序线索化成功！\n");
+	
+	printf("通过后继方式，遍历中序线索二叉树:");
+	InOrderPost(BT);
+	printf("\n"); 
+	
+	printf("通过前驱方式，遍历中序线索二叉树:");
+	InOrderPre(BT);
+	for(i=strlen(c)-1;i>=0;i--){
+		printf("%c ",c[i]);
+	}
+	printf("\n"); 
+
+	return 0;
+}

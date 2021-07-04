@@ -1,0 +1,158 @@
+    #include<stdio.h>
+    #include<stdlib.h>
+    #include <string.h>
+    #define MaxSize 200
+    
+    typedef struct Node//结构体  
+    {
+    	char data;
+		int ltag,rtag;
+    	struct Node *LChild;
+    	struct Node *RChild;
+    } BiTNode,*BiTree;
+    
+    
+    void InitList(BiTree l)//初始化
+    {
+    l= (BiTree)malloc(sizeof(BiTNode));
+    l->LChild = NULL;
+    l->RChild = NULL;
+    }
+    
+    void CreateBiTree(BiTree &bt) //先序创建二叉树 
+    {
+    	char ch;
+    	ch = getchar();
+    	if (ch == '#') bt = NULL;
+    	else
+    	{
+    		bt = (BiTree)malloc(sizeof(BiTNode));
+    		bt->data = ch;
+    		CreateBiTree(bt->LChild);
+    		CreateBiTree(bt->RChild);
+    	}
+    }
+    
+    void PreOrder(BiTree root)//先序遍历 
+    {
+    	if (root != NULL)
+    	{
+    		printf("%c", root->data);
+    		PreOrder(root->LChild);
+    		PreOrder(root->RChild);
+    	}
+    }
+    BiTNode *pre = NULL;
+//	对二叉树进行中序索引化
+	void Thread(BiTree p){
+		if(p!=NULL){
+			Thread(p->LChild);
+			if(p->LChild==NULL){
+				p->LChild=pre;
+				p->ltag;
+			}
+			else p->ltag=0;
+			if(pre->RChild==NULL){
+				p->RChild=p;
+				pre->rtag=1;
+			}
+			else{ pre->rtag=0;}
+			pre = p;
+			Thread(p->RChild);
+		}
+	}
+
+
+	//中序线索化二叉树
+	BiTree CreateThread(BiTree b){
+		BiTree root;
+		root = (BiTNode *)malloc(sizeof(BiTNode));
+		root->ltag=0;
+		root->rtag=1;
+		root->RChild=b;
+		printf("线索化成功 !\n");
+		if(b==NULL) root->LChild=root;
+		else{
+			root->LChild=b;
+			pre=root;
+			Thread(b);
+			pre->RChild=root;
+			pre->rtag=1;
+			root->RChild=pre;
+		}
+		return root;
+	}
+
+
+BiTree inBiSearchPre(BiTree BT){
+    BiTree pre;
+    pre=BT->LChild;
+    if(BT->ltag!=1){
+        while(pre->rtag==0)
+            pre=pre->RChild;
+    }
+    return pre;
+}
+ 
+//找前驱方式，遍历中序线索二叉树
+char c[7]; 
+void InOrderPre(BiTree BT){
+	int i=0;
+    BiTree p;
+    p=BT->RChild;
+    while(p!=NULL&&p!=BT){
+    	c[i]=p->data;
+        i++;
+        p=inBiSearchPre(p);
+    }
+}
+
+//中序线索二叉树，查找某节点后继 
+BiTree inBiSearchPost(BiTree BT){
+    BiTree post;
+    post=BT->RChild;
+    if(BT->rtag != 1){
+        while(post->ltag==0)
+            post=post->LChild;
+    }
+    return post;
+}
+ 
+//找后继方式，遍历中序线索二叉树
+void InOrderPost(BiTree BT){
+    BiTree p;
+    p=BT->LChild;
+    while(p->ltag!=1){
+        p=p->LChild;
+    }
+    while(p!=NULL&&p!=BT){
+        printf("%c ",p->data); 
+        p=inBiSearchPost(p);
+    }
+}
+
+
+    int main()
+    {
+    	BiTree bt;
+    	InitList(bt);
+    	CreateBiTree(bt);
+    	
+    	printf("先序遍历：");
+    	PreOrder(bt);
+    	printf("\n");
+		
+	bt=CreateThread(bt);
+	printf("中序线索化成功！\n");
+	printf("找后继方式，遍历中序线索二叉树:");
+	InOrderPost(bt);
+	printf("\n"); 
+	printf("找前驱方式，遍历中序线索二叉树:");
+	InOrderPre(bt);
+	for(i=strlen(c)-1;i>=0;i--){
+		printf("%c ",c[i]);
+	}
+	printf("\n"); 
+
+    	return 0;
+    }

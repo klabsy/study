@@ -1,0 +1,175 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include <string.h>
+#define MaxSize 100
+
+typedef struct node{
+	int data;
+	struct node *next;
+}Node,*NodeType;
+
+//初始化空间 
+NodeType init(){
+	NodeType L;
+	L=(NodeType)malloc(sizeof(struct node));
+	if(L == NULL) {  
+        printf("申请内存空间失败\n");
+    }
+	L->next=NULL;
+	return L;
+}
+
+//创建整数单链表
+void CreateLink(NodeType L,char a[],int n){
+	Node *p,*q;
+	q=L;
+	int i,val;
+	char c[1];
+	for(i=0;i<n;i++){
+		p=(Node*)malloc(sizeof(struct node));
+		//数组单个字符转换为整数 
+		c[0]=a[i];
+		val = atoi(c);
+		p->data=val;
+		q->next=p;
+		q=p;
+	}
+	q->next=NULL;
+}
+//获取链表长度
+int len(NodeType L){
+	Node *q;
+	int n=0;
+	q=L;
+	while(q->next!=NULL){
+		q=q->next;n++;
+	} 
+	return n;
+} 
+//插入元素 
+void InsertLink(NodeType L,int e){
+	Node *p,*q;
+	q=L;
+	while(q->next!=NULL){
+		q=q->next;
+	}
+	p=(Node*)malloc(sizeof(struct node));
+	p->data=e;
+	q->next=p;
+	p->next=NULL;
+}
+//释放整数单链表
+void DestroyLink(NodeType L){
+	if(L!=NULL)
+		free(L);
+}
+
+//输出整数单链表
+void DispLink(NodeType L){
+	Node *p;
+	p=L->next;
+	printf("%d",p->data);
+	p=p->next;
+	while(p!=NULL){
+		printf("%d",p->data);
+		p=p->next;
+	}
+	printf("\n");
+}
+//逆置操作 
+NodeType Reverse(NodeType L){
+	//pre指向先驱  
+	NodeType pre,cur,p;
+	p=L->next;
+	pre = NULL;
+	while(p!=NULL){
+		cur=p;
+		p=p->next;
+		cur->next = pre;
+		pre =cur;
+	}
+	L->next=cur;
+	return L;		
+}
+void Add(NodeType L,NodeType A,NodeType B){
+	Node *p,*q,*t;
+	B=Reverse(B);
+	A=Reverse(A);
+	p=A->next;
+	q=B->next;
+	t=L;
+	int s,c;
+	while(q!=NULL){
+		s=(p->data+q->data+c)%10;
+		c=(p->data+q->data+c)/10;
+		InsertLink(t,s);
+		p=p->next;
+		q=q->next;
+	}
+	if(c!=0){
+		InsertLink(t,1);
+	}
+	
+}
+//求整数单链表的中间位。
+void Mid(NodeType L,int n){
+	Node *quick,*slow;
+	quick=L;
+	slow =L;
+	
+	if(n%2==0){
+		while(quick->next!=NULL){
+			quick=quick->next->next;
+			slow=slow->next;
+	}
+	printf("中间位为%d\n",slow->data);
+	}
+	else{
+		while(quick!=NULL){
+			quick=quick->next->next;
+			slow=slow->next;
+	}
+	printf("中间位为%d\n",slow->data);
+	}
+	
+}
+
+
+
+int main() {
+	int  length1,length2;
+	printf("输入第一个数:");
+	char a[MaxSize];
+    gets(a);
+    length1=strlen(a);
+    NodeType A;
+	A=init();
+	CreateLink(A,a,length1);
+	printf("单链表A:");
+	DispLink(A); 
+	
+	printf("输入第二个数:");
+	char b[MaxSize];
+    gets(b);
+    length2=strlen(b);
+    NodeType B;
+	B=init();
+	CreateLink(B,b,length2);
+	printf("单链表B:");
+	DispLink(B);
+	//初始化C
+	NodeType C;
+	C=init(); 
+	//相加
+	if(length1>=length2){
+		Add(C,A,B);
+	}
+	else Add(C,B,A);
+	C=Reverse(C);
+	printf("两整数单链表A和B相加结果C:");
+	DispLink(C);
+	
+	//中间数
+	Mid(C,len(C));
+	return 0;
+}

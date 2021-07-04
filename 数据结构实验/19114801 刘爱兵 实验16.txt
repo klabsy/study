@@ -1,0 +1,131 @@
+//头文件glist.h，定义数据类型，声明函数；
+
+
+typedef char ElemType;
+typedef struct lnode
+{
+    int tag;                   
+    union
+    {
+        ElemType data;          
+        struct lnode *sublist;  
+    } val;
+    struct lnode *link;        
+} GLNode;                       
+ 
+int GLLength(GLNode *g);       
+int GLDepth(GLNode *g);     
+GLNode *CreateGL(char *&s);    
+void DispGL(GLNode *g);     
+         
+//源文件glist.cpp
+
+#include <stdio.h>
+#include <malloc.h>
+#include "glist.h"
+
+int GLLength(GLNode *g)    
+    int n=0;
+    GLNode *g1;
+    g1=g->val.sublist;    
+    while (g1!=NULL)
+    {
+        n++;                
+        g1=g1->link;
+    }
+    return n;
+}
+ 
+int GLDepth(GLNode *g)     
+{
+    GLNode *g1;
+    int max=0,dep;
+    if (g->tag==0)        
+        return 0;
+    g1=g->val.sublist;     
+    if (g1==NULL)        
+        return 1;
+    while (g1!=NULL)      
+    {
+        if (g1->tag==1)    
+        {
+            dep=GLDepth(g1);    
+            if (dep>max)    
+                max=dep;
+        }
+        g1=g1->link;            
+    }
+    return(max+1);        
+}
+ 
+GLNode *CreateGL(char *&s)    
+{
+    GLNode *g;
+    char ch=*s++;                      
+    if (ch!='\0')                     
+    {
+        g=(GLNode *)malloc(sizeof(GLNode));
+        if (ch=='(')                   
+        {
+            g->tag=1;                   
+            g->val.sublist=CreateGL(s); 
+        }
+        else if (ch==')')
+            g=NULL;                  
+        else if (ch=='#')             
+            g=NULL;
+        else                           
+        {
+            g->tag=0;                
+        }
+    }
+    else                                
+        g=NULL;
+    ch=*s++;                          
+    if (g!=NULL)                      
+    {
+        if (ch==',')                   
+            g->link=CreateGL(s);      
+        else                            
+            g->link=NULL;
+    }
+ 
+    return g;                           
+ 
+void DispGL(GLNode *g)                
+    if (g!=NULL)                     
+    {
+        //先处理g的元素
+        if (g->tag==0)                 
+            printf("%c", g->val.data); 
+        else                          
+        {
+            printf("(");             
+            if (g->val.sublist==NULL)   
+                printf("#");
+            else                      
+                DispGL(g->val.sublist); 
+            printf(")");            
+        }
+        if (g->link!=NULL)
+        {
+            printf(",");
+            DispGL(g->link);          
+        }
+    }
+}
+
+//main函数
+
+#include <stdio.h>
+#include "glist.h"
+int main()
+{
+    GLNode *g;
+    char *s="(b,(b,a,(#),d),((a,b),c((#))))";
+    g = CreateGL(s);
+    DispGL(g);
+    printf("广义表的长度为:%d\n", GLLength(g));
+    printf("广义表的深度为:%d\n", GLDepth(g));
+    return 0;
+}

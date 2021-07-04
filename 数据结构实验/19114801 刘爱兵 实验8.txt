@@ -1,0 +1,174 @@
+/*int flag;
+		flag=scanf("%d",%e);fflush(stdin);
+		if(flag==1){}
+		else{printf("输入不合法!\n");}*/
+
+#include <stdio.h>
+#include <stdlib.h>
+typedef int QElemType;
+typedef int Status;
+#define TRUE 1
+#define FALSE 0
+#define MaxQsize 100   	//最大队列长度
+
+typedef struct QNode    /* 声明链式队列的结点 */
+ {
+     QElemType data;
+     struct QNode *next;
+ }Node;
+ 
+typedef struct     /* 声明链式队列的首尾指针 */
+{
+     Node *front;
+     Node *rear;
+     QElemType length; /* 记录链式队列长度 */
+}Queue,*QUEUE;
+//队列的初始化 
+QUEUE init (Queue *q){
+	q->front=q->rear=(Node *)malloc(sizeof(Node));
+	if(q->front==NULL&&q->rear==NULL)
+		printf("初始化失败！");
+	else q->front->next=NULL;
+	return q;
+}
+ //链式队列的判空操作 
+Status QueueEmpty(Queue *q){
+	if(q->front==q->rear){
+		return TRUE;
+	}
+	else return FALSE;
+}
+//返回队列的长度 
+QElemType length(Queue *q){
+	return q->length;
+}
+QUEUE enQueue(Queue *q,QElemType e){
+	Node *p;
+	p=(Node *)malloc(sizeof(Node));
+	p->data=e;
+	p->next=NULL;
+	if (p == NULL)    /* 判断分配内存是否失败 */
+    {
+        printf("配内存是否失败 !\n");
+        exit(0);
+    }
+
+	q->rear->next=p;
+	q->rear=p;
+	q->length++;
+	return q;
+}
+
+void Gethead(Queue *q){
+	if(QueueEmpty(q)==1){printf("队列为空!\n");}
+	else{
+	printf("队头元素值为:%d\n",q->front->next->data);
+	}
+}
+
+QUEUE DeQueue(Queue *q){
+	Node *t;
+	if(QueueEmpty(q)==1){
+		printf("队列为空！不能出列!\n");
+		return q;
+	}
+	else{
+		if(q->front->next==q->rear){//出队节点为最后一个节点 
+			printf("队首元素为:%d",q->front->next->data);
+			q->rear=q->front;
+			q->front->next=NULL;
+			printf("队列为空!\n");
+			q->length--;
+		}
+		else{
+		printf("队首元素为:%d\n",q->front->next->data);
+		t=q->front->next;
+		q->front->next=t->next;
+		free(t);
+		q->length--;
+		}
+	}
+	return q;
+}
+void PrQueue(Queue *q){
+	Node *p;
+	int i=0;
+	p=q->front->next;
+	for(;i<q->length;i++){
+		printf("%3d",p->data);
+		p=p->next;
+	}
+	printf("\n");
+}
+void menu(){
+	printf("\n");
+	printf("1:判断队列是否为空\t 2:测试队列的长度\n");
+			printf("3:取队头元素值   \t 4：向队列中插入一新元素\n");
+			printf("5:元素出队列       \t 6:菜单\n");
+			printf("7:打印队列           \t0.结束\n");
+} 
+int main() {
+	Queue *q;
+	q=(Queue *)malloc(sizeof(Queue));
+	q=init(q); 
+	q->length=0;
+	int k,e;
+	menu(); 
+	
+	do{
+		printf("请输入你的选择：");
+		int flag;
+		flag=scanf("%d",&k);
+		if(k<0||k>7)printf("无此功能!\n");
+		else{
+		fflush(stdin);
+			if(flag==1){
+				switch(k){
+					case 1:{
+						if(QueueEmpty(q)==1)
+								printf("队列为空！\n");
+						break;
+					}
+					case 2:{
+						printf("队列长度为:%d\n",length(q));
+						break;
+					} 
+					case 3:{
+						Gethead(q);
+							break;
+						}
+					case 4:{
+						
+						printf("请输入待插入元素:");
+						int flag;
+						flag=scanf("%d",&e);
+						fflush(stdin);
+						if(flag==1){
+							  q=enQueue(q,e);
+							printf("元素成功插入!\n");
+							printf("插入元素%d后，队列为：",e);
+							PrQueue(q);
+						   }
+						else{printf("输入不合法!\n");}
+						break;
+						}
+					case 5:{
+						DeQueue(q);
+						break;
+					}
+					case 6:{
+						menu();
+						break;
+					}
+					case 7:{
+						PrQueue(q);
+						break;
+					}
+				}
+			
+			}
+			else{printf("输入不合法!\n");}
+			}
+}while(k!=0);
+	return 0;
+}

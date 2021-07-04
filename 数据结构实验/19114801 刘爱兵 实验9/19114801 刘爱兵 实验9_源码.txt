@@ -1,0 +1,145 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define TRUE 1
+#define FALSE 0
+
+typedef int boolean;
+typedef struct Sicker {//病人的结构
+	int arrive;//到达时间
+	int treat;//处理时间
+}sicker;
+
+typedef struct Node {
+	sicker data;
+	struct Node* next;
+}node;
+
+typedef struct Queue {
+	node* front;//队首
+	node* rear;//队尾
+}queue;
+//初始化队列
+queue* init() {
+	queue* head = (queue*)malloc(sizeof(queue));
+	head->front = (node*)malloc(sizeof(node));
+	head->rear = head->front;
+	head->front->next = NULL;
+	return head;
+}
+//队列插入操作
+void inQueue(queue* q, sicker data) {
+	node* p = (node*)malloc(sizeof(node));
+	p->data = data;
+	p->next = NULL;
+	q->rear->next = p;
+	q->rear = p;
+}
+//判断队列是否为空
+boolean isEmpty(queue* q) {
+	if (q->front->next == NULL)
+		return TRUE;
+	else
+		return FALSE;
+}
+//出队列
+sicker deQueue(queue* q) {
+	sicker e;
+	node* p = NULL;
+	if (isEmpty(q)) {
+		exit(0);
+	}
+	e = q->front->next->data;
+	p = q->front->next;
+	q->front->next = p->next;
+	free(p);
+	return e;
+}
+//遍历队列
+void printQueue(queue* q,int n){
+	sicker e;
+	int i=1;
+	int t=0;
+	node* p = NULL;
+	p=q->front->next;
+	if (isEmpty(q)) {
+		exit(0);
+	}
+	printf("1小时内共有%d位病人来看病。\n",n-1);
+	while(p->next!=NULL){
+		//统计总时间
+		t +=p->data.arrive;
+		printf("第%d个病人在第%d分钟到达,所需处理时间%d分钟\n",i++,t,p->data.treat);
+		
+		p=p->next;
+	}
+}
+int main() {
+	//创建一个文件夹data.text 
+	FILE *fp = NULL;
+	fp = fopen("D:/bianchen/dev ++/data.txt", "w+");
+	sicker temp,cur;
+	queue* q = init();
+	//，以当前时间对应的int值为随机序列起点，这样每次运行程序，由于起点不同才可以得到不同的随机数
+	srand(int (time(0)));
+	int n=0,t=0;
+	//一个小时内
+	do{
+		//假设病人到达时间间隔不超过15分钟
+		temp.arrive = (rand()%15+1);
+		//假设病人接受治疗时间不超过10分钟
+		temp.treat =  rand()%10+1;
+		//统计总时间
+		t +=temp.arrive;
+		inQueue(q, temp);
+		// printf("第%d个病人在第%d分钟到达,所需处理时间%d分钟\n",n+1,t,temp.treat);
+		n++;
+
+	}while(t<=60);
+	//注:代码存在一个问题，在判断是否超过一个小时的时候，最后来的看病人超过一个小时后停止入队，但此人已经入队，队列中所有看病人超过一个小时 
+	
+	//调用输出对应时间的
+	printQueue(q, n);
+
+	//定义医生总空余时间和病人总等待时间
+	int d_time=0,p_time=0;
+	int i;
+	node* p = q->front->next;
+	for(i=0;i<n-1;i++){
+		if(i==0){
+			d_time+=p->data.arrive;
+		}
+		else{
+			if((p->next->data.arrive - p->data.treat)>0){
+				d_time+=p->data.arrive - p->next->data.treat;
+				p=p->next;
+			}
+			else{
+				p_time +=p->data.treat-p->next->data.arrive;
+				p=p->next;
+			}
+		}
+	}
+	n--;
+	printf("医生的总空余时间为%d分钟。\n",d_time);
+	printf("病人的平均等待时间为%d分钟\n",p_time/n);
+	
+	//输入到文件data.txt里 
+	fprintf(fp, "1小时内共有%d位病人来看病。\n",n-1);
+	p=q->front->next;
+	t=0;
+	while(p->next!=NULL){
+		//统计总时间
+		t +=p->data.arrive;
+		fprintf(fp, "第%d个病人在第%d分钟到达,所需处理时间%d分钟\n",i++,t,p->data.treat);
+		p=p->next;
+	}
+	
+   	fprintf(fp, "医生的总空余时间为%d分钟。\n",d_time);
+   	fprintf(fp, "病人的平均等待时间为%d分钟\n",p_time/n);
+	fclose(fp);
+	
+	return 0;
+}

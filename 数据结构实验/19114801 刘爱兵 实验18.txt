@@ -1,0 +1,180 @@
+    #include<stdio.h>
+    #include<stdlib.h>
+    #include<malloc.h>
+    #define MaxSize 200
+    
+    typedef struct Node//结构体  
+    {
+    	char data;
+    	struct Node *LChild;
+    	struct Node *RChild;
+    } BiTNode,*BiTree;
+    
+    void InitList(BiTree &l)//初始化
+    {
+    l= (BiTree)malloc(sizeof(BiTNode));
+    l->LChild = NULL;
+    l->RChild = NULL;
+    }
+    
+    void CreateBiTree(BiTree &bt) //先序创建二叉树 
+    {
+    	char ch;
+    	ch = getchar();
+    	if (ch == '#') bt = NULL;
+    	else
+    	{
+    		bt = (BiTree)malloc(sizeof(BiTNode));
+    		bt->data = ch;
+    		CreateBiTree(bt->LChild);
+    		CreateBiTree(bt->RChild);
+    	}
+    }
+    
+
+    void PreOrder(BiTree root)//先序遍历 
+    {
+    	if (root != NULL)
+    	{
+    		printf("%c", root->data);
+    		PreOrder(root->LChild);
+    		PreOrder(root->RChild);
+    	}
+    }
+    
+    void InOrder(BiTree root)//中序遍历 
+    {
+    	if (root != NULL)
+    	{
+    		InOrder(root->LChild);
+    		printf("%c", root->data);
+    		InOrder(root->RChild);
+    	}
+    }
+    
+    void PostOrder(BiTree root)//后序遍历 
+    {
+    	if (root != NULL)
+    	{
+    		PostOrder(root->LChild);
+    		PostOrder(root->RChild);
+    		printf("%c", root->data);
+    	}
+    }
+    
+    //双序遍历算法
+    void DoubleTraverse(BiTree T)
+{
+	if(T == NULL)
+		return;
+	else if(T->LChild==NULL&&T->RChild==NULL)
+		printf("%c",T->data);     
+	else
+	{
+		printf("%c",T->data);
+		DoubleTraverse(T->LChild);   
+		printf("%c",T->data);
+		DoubleTraverse(T->RChild);   
+	}
+}
+
+//
+
+//二叉树最大宽度
+int Width(BiTree bt)
+{
+	if (bt==NULL) 
+		return (0);  
+	else 
+	{ 
+	  BiTree Q[100],p;
+      int front=1,rear=1,last=1;
+      
+      int temp=0,maxw=0;       
+      Q[rear]=bt;           
+      while(front<=last)
+	  {
+		  p=Q[front++]; 
+		  temp++; 
+          if (p->LChild!=NULL)  Q[++rear]=p->LChild;   
+		  if (p->RChild!=NULL)  Q[++rear]=p->RChild;   
+		  if (front>last)       
+		  { 
+			    last=rear;
+				if(temp>maxw) maxw=temp;
+				temp=0;
+		  }//if    
+	  }//while
+	
+     return (maxw);
+	}
+}
+//
+ void longest_path(BiTree T,int *path,int &len,int *longestpath,int &longest_len)
+{
+	if(T!=NULL)
+	{
+		if(T->LChild==NULL&&T->RChild==NULL)
+		{
+			path[len]=T->data;
+			if(len>longest_len)
+			{
+				for(int j=0;j<=len;j++)
+				{
+					longestpath[j]=path[j];
+				}
+				longest_len=len;
+			}
+		}
+		else
+		{
+			path[len++]=T->data;
+			longest_path(T->LChild ,path,len,longestpath,longest_len);
+			longest_path(T->RChild ,path,len,longestpath,longest_len);
+			len--;
+		}
+	}
+}
+
+    int main()
+    {
+    	BiTree bt;
+    	InitList(bt);
+    	CreateBiTree(bt);
+    	
+    	printf("先序遍历：");
+    	PreOrder(bt);
+    	printf("\n");
+    	
+    	printf("中序遍历：");
+    	InOrder(bt);
+    	printf("\n");
+    	
+    	printf("后序遍历：");
+    	PostOrder(bt);
+    	printf("\n");
+    	
+    	printf("双序遍历:");
+    	DoubleTraverse(bt); 
+    	printf("\n");
+    	
+    	int maxwidth;
+		maxwidth=Width(bt);
+		printf("最大宽度为：%d\n",maxwidth);
+		
+		int path[MaxSize]={0};
+		int longestpath[MaxSize]={0};
+		int len=0;
+		int longest_len=0;
+		longest_path(bt,path,len,longestpath,longest_len);
+		printf("第一条最长的路径长度为：%d\n",longest_len);
+		printf("路径为：");
+		printf("%c",longestpath[0]); 
+		for(int i=1;i<=longest_len;i++)
+		{
+			
+			printf(" ->%c",longestpath[i]);
+		}
+		
+    	return 0;
+    }

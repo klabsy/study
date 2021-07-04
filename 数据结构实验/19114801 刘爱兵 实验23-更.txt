@@ -1,0 +1,1226 @@
+//栈的头文件SqStack.h
+
+#ifndef TEST_SQSTACK_H
+#define TEST_SQSTACK_H
+#include "malloc.h"
+#define MAXN 100
+//栈
+typedef struct{
+
+    int data[MAXN];
+    int top;
+
+}SqStack;
+
+//栈的基本操作
+void InitStack(SqStack* s);
+
+bool StackEmpty(SqStack* s);
+
+bool Push(SqStack* s,int e);
+
+bool Pop(SqStack* s,int e);
+
+
+#endif //TEST_SQSTACK_H
+
+
+//栈的实现文件SqStack.cpp
+
+//栈的基本操作
+
+#include "SqStack.h"
+
+void InitStack(SqStack* s){
+
+    s = (SqStack *)malloc(sizeof(SqStack));
+    s->top = -1;
+
+}
+
+bool StackEmpty(SqStack* s){
+
+    return (s->top == -1);
+
+}
+
+bool Push(SqStack* s,int e){
+
+    if(s->top == MAXN-1) return false;
+
+    s->top++;
+    s->data[s->top] = e;
+    return true;
+
+}
+
+bool Pop(SqStack* s,int e){
+
+    if(s->top == -1) return false;
+
+    e = s->data[s->top];
+    s->top--;
+    return true;
+
+}
+
+
+//队列的头文件SqQueue.h
+
+
+#ifndef TEST_SQQUEUE_H
+#define TEST_SQQUEUE_H
+
+#include <malloc.h>
+#define MAXN 100
+//环形队列
+typedef struct{
+
+    int data[MAXN];
+    int front;
+    int rear;
+
+}SqQueue;
+
+void InitQueue(SqQueue* q);
+bool QueueEmpty(SqQueue* q);
+bool enQueue(SqQueue* q,int e);
+bool deQueue(SqQueue* q,int e);
+
+#endif //TEST_SQQUEUE_H
+
+
+//队列的实现文件SqQueue.cpp
+
+
+#include "SqQueue.h"
+
+//队列的基本操作
+void InitQueue(SqQueue* q){	//初始化队列
+
+    q = (SqQueue *)malloc(sizeof(SqQueue));
+    q->front = -1;
+    q->rear = -1;
+
+}
+
+bool QueueEmpty(SqQueue* q){	//判断队列是否为空
+
+    return (q->front == q->rear);
+
+}
+
+bool enQueue(SqQueue* q,int e){	//进队
+
+    if(q->rear == MAXN-1){
+
+        return false;
+
+    }
+
+    q->rear++;
+    q->data[q->rear] = e;
+    return true;
+
+}
+
+bool deQueue(SqQueue* q,int e){	//出队
+
+    if(q->front == q->rear){
+
+        return false;
+
+    }
+
+    q->front++;
+    e = q->data[q->front];
+    return true;
+
+}
+
+//实现文件main.cpp
+
+#include <stdio.h>
+#include <malloc.h>
+
+#define MAXN 100
+#define INF 32767
+
+#include "SqQueue.h"
+#include "SqStack.h"
+//邻接矩阵
+typedef struct{
+
+    int no;				   //顶点编号
+    int info ;
+
+}VertexType;
+
+typedef struct{
+
+    int edges[MAXN][MAXN]; //邻接矩阵
+    int n,e;			   //顶点数，边数
+    VertexType vexs[MAXN];
+
+}MatGraph;
+
+typedef struct{
+
+    int u,v;
+    int w;
+
+}Edge;
+//邻接表
+typedef struct Anode{
+
+    int adjvex;
+    struct Anode *nextarc;
+    int weight;
+
+}ArcNode;
+
+typedef struct Vnode{
+
+    int info;
+    int count;
+    ArcNode *firstarc;
+
+}VNode;
+
+typedef struct{
+
+    VNode adjlist[MAXN];
+    int n,e;
+
+}AdjGraph;
+
+int re[MAXN];
+void initRe(){
+
+    for(int i=0;i<MAXN;i++){
+
+        re[i] = 0;
+
+    }
+
+}
+
+void initMat(MatGraph* m){		//初始化邻接矩阵
+
+    for(int i=0;i<m->n;i++){
+
+        for(int j=0;j<m->n;j++){
+
+            m->edges[i][j] = 0;
+
+        }
+
+    }
+
+}
+
+void CreateAdj(AdjGraph* g,MatGraph* m,int n,int e){		//创建邻接表
+
+    g = (AdjGraph *)malloc(sizeof(AdjGraph));
+
+    g->n = n;
+    g->e = e;
+
+    for(int p=0;p<n;p++){
+
+        g->adjlist[p].info = m->vexs[p].no;
+        g->adjlist[p].firstarc = NULL;
+
+    }
+
+    int i;
+    for(i=0;i<n;i++){
+
+        for(int j=n-1;j>=0;j--){
+
+            if(m->edges[i][j] != 0 && m->edges[i][j] != INF){
+
+                ArcNode *temp = (ArcNode *)malloc(sizeof(ArcNode));
+                temp->adjvex = j;
+                temp->weight = m->edges[i][j];
+                temp->nextarc = g->adjlist[i].firstarc;
+                g->adjlist[i].firstarc = temp;
+
+            }
+
+        }
+
+    }
+
+}
+
+void DisAdjwu(AdjGraph* g){		//输出无权邻接表
+
+    printf("图的邻接表表示如下:\n");
+    ArcNode *temp;
+    for(int i=0;i<g->n;i++){
+
+        printf("%d->",g->adjlist[i].info);
+        temp = g->adjlist[i].firstarc;
+        while(temp != NULL){
+
+            printf("%d->",g->adjlist[temp->adjvex].info);
+            temp = temp->nextarc;
+
+        }
+
+        printf("NULL\n");
+
+    }
+
+}
+
+void DisAdjyou(AdjGraph* g){		//输出有权邻接表
+
+    printf("图的邻接表表示如下:\n");
+    ArcNode *temp;
+    for(int i=0;i<g->n;i++){
+
+        printf("%d->",g->adjlist[i].info);
+        temp = g->adjlist[i].firstarc;
+        while(temp != NULL){
+
+            printf("%d %d->",g->adjlist[temp->adjvex].info,temp->weight);
+            temp = temp->nextarc;
+
+        }
+
+        printf("NULL\n");
+
+    }
+
+}
+
+void initVisit(int visit[]){	//初始化输出路径
+
+    for(int i=0;i<MAXN;i++){
+
+        visit[i] = 0;
+
+    }
+
+}
+
+void DFS(AdjGraph* g,int v,int visit[]){	//深度优先遍历
+
+    ArcNode *p;
+    visit[re[v]] = 1;
+
+    printf("%d ",v);
+    p = g->adjlist[re[v]].firstarc;
+    while(p != NULL){
+
+        if(visit[p->adjvex] == 0) DFS(g,g->adjlist[p->adjvex].info,visit);
+        p = p->nextarc;
+
+    }
+
+
+}
+
+void BFS(AdjGraph*  g,int v,int visit[]){	//广度优先遍历
+
+    int w;
+    ArcNode *p;
+    SqQueue *qu;
+    InitQueue(qu);
+
+    printf("%d ",v);
+    visit[re[v]] = 1;
+    enQueue(qu,re[v]);
+    while(!QueueEmpty(qu)){
+
+        deQueue(qu,w);
+        p = g->adjlist[w].firstarc;
+        while(p != NULL){
+
+            if(visit[p->adjvex] == 0){
+
+                printf("%d ",g->adjlist[p->adjvex].info);
+                visit[p->adjvex] = 1;
+                enQueue(qu,p->adjvex);
+
+            }
+
+            p = p->nextarc;
+
+        }
+
+    }
+
+    printf("\n");
+
+}
+
+void Prim(AdjGraph*  a,MatGraph*  g,int v){	//Prime算法
+    int i,j;
+    int lowcost[MAXN];
+    int MIN;
+    int closest[MAXN];
+    int k;
+
+    for(i=0;i<g->n;i++){
+
+        lowcost[i] = g->edges[re[v]][i];
+        closest[i] = re[v];
+
+    }
+
+    for(i=1;i<g->n;i++){
+
+        MIN = INF;
+        for(j=0;j<g->n;j++){
+
+            if(lowcost[j] != 0 && lowcost[j]<MIN){
+
+                MIN = lowcost[j];
+                k = j;
+
+            }
+
+        }
+
+        printf("边(%d,%d)权为:%d\n",a->adjlist[closest[k]].info,a->adjlist[k].info,MIN);
+        lowcost[k] = 0;
+        for(j=0;j<g->n;j++){
+
+            if(lowcost[j] != 0 && g->edges[k][j]<lowcost[j]){
+
+                lowcost[j] = g->edges[k][j];
+                closest[j] = k;
+
+            }
+
+        }
+
+    }
+
+}
+
+void InsertSort(Edge e[],int n){	//插入排序
+
+    int i = 0,j = 0;
+    Edge temp;
+
+    for(i=1;i<n;i++){
+
+        temp = e[i];
+        j = i-1;
+
+        while(j>=0 && e[j].w>temp.w){
+
+            e[j+1] = e[j];
+            j--;
+
+        }
+
+        e[j+1] = temp;
+
+    }
+
+}
+
+void Kruskal(AdjGraph* a,MatGraph* g){		//Kruskal算法
+
+    int i,j,u1,v1,sn1,sn2,k;
+    int vset[MAXN];
+    Edge E[MAXN];
+    k = 0;
+    for(i=0;i<g->n;i++){
+
+        for(j=0;j<=i;j++){
+
+            if(g->edges[i][j] != 0 && g->edges[i][j] != INF){
+
+                E[k].u = i;
+                E[k].v = j;
+                E[k].w = g->edges[i][j];
+                k++;
+
+            }
+
+        }
+
+    }
+
+    InsertSort(E,g->e);
+    for(i=0;i<g->n;i++){
+
+        vset[i] = i;
+
+    }
+
+    k = 1;
+    j = 0;
+    while(k<g->n){
+
+        u1 = E[j].u;
+        v1 = E[j].v;
+        sn1 = vset[u1];
+        sn2 = vset[v1];
+
+        if(sn1 != sn2){
+
+            printf("(%d,%d):%d\n",a->adjlist[u1].info,a->adjlist[v1].info,E[j].w);
+            k++;
+            for(i=0;i<g->n;i++){
+
+                if(vset[i] == sn2){
+
+                    vset[i] = sn1;
+
+                }
+
+            }
+
+        }
+        j++;
+
+    }
+
+}
+
+void quanMatwu(MatGraph* m,AdjGraph* a){		//将不带权无向图邻接矩阵改为带权邻接矩阵
+
+    printf("请输入每条边及其权值(格式：序号i 序号j 权值w):\n");
+    int x,y,w,i,j;
+    for(i=0;i<m->e;i++){
+
+        scanf("%d %d %d",&x,&y,&w);
+        m->edges[re[x]][re[y]] = w;
+        m->edges[re[y]][re[x]] = w;
+
+    }
+
+    for(i=0;i<m->n;i++){
+
+        for(j=0;j<m->n;j++){
+
+            if(m->edges[i][j] == 0 && i != j){
+
+                m->edges[i][j] = INF;
+
+            }
+
+        }
+
+    }
+
+    CreateAdj(a,m,m->n,m->e);
+    DisAdjyou(a);
+    printf("\n");
+
+}
+
+void quanMatyou(MatGraph* m,AdjGraph* a){		//将不带权有向图邻接矩阵改为带权邻接矩阵
+    int i,j;
+    printf("请输入每条边及其权值(格式：序号i 序号j 权值w):\n");
+    int x,y,w;
+    for(i=0;i<m->e;i++){
+
+        scanf("%d %d %d",&x,&y,&w);
+        m->edges[re[x]][re[y]] = w;
+
+    }
+
+    for(i=0;i<m->n;i++){
+
+        for(j=0;j<m->n;j++){
+
+            if(m->edges[i][j] == 0 && i != j){
+
+                m->edges[i][j] = INF;
+
+            }
+
+        }
+
+    }
+
+    CreateAdj(a,m,m->n,m->e);
+    DisAdjyou(a);
+    printf("\n");
+
+}
+
+void DispathD(AdjGraph* a,MatGraph* g,int dist[],int path[],int S[],int v){	//Dijkstra输出最短路径
+
+    int i,j,k;
+    int apath[MAXN],d;
+    for(i=0;i<g->n;i++){
+
+        if(S[i]==1 && i!=re[v]){
+
+            printf("从顶点到%d到顶点%d的路径长度为:%d\t路径为:",v,a->adjlist[i].info,dist[i]);
+            d = 0;
+            apath[d] = i;
+            k = path[i];
+            if(k == -1) printf("无路径\n");
+            else{
+
+                while(k != re[v]){
+
+                    d++;
+                    apath[d] = k;
+                    k = path[k];
+
+                }
+                d++;
+                apath[d] = re[v];
+                printf("%d",a->adjlist[apath[d]].info);
+                for(j=d-1;j>=0;j--) printf(",%d",a->adjlist[apath[j]].info);
+                printf("\n");
+
+            }
+
+        }
+
+    }
+
+}
+
+void Dijkstra(MatGraph* g,int v,AdjGraph* a){
+
+    int dist[MAXN],path[MAXN];
+    int S[MAXN];
+    int MINdis,i,j,u;
+    for(i=0;i<g->n;i++){
+
+        dist[i] = g->edges[re[v]][i];
+        S[i] = 0;
+        if(g->edges[re[v]][i]<INF) path[i] = re[v];
+        else path[i] = -1;
+
+    }
+    S[re[v]] = 1;
+    path[re[v]] = 0;
+
+    for(i=0;i<g->n-1;i++){
+
+        MINdis = INF;
+        for(j=0;j<g->n;j++){
+
+            if(S[j]==0 && dist[j]<MINdis){
+
+                u = j;
+                MINdis = dist[j];
+
+            }
+
+        }
+
+        S[u] = 1;
+        for(j=0;j<g->n;j++){
+
+            if(S[j] == 0){
+
+                if(g->edges[u][j]<INF && dist[u]+g->edges[u][j]<dist[j]){
+
+                    dist[j] = dist[u]+g->edges[u][j];
+                    path[j] = u;
+
+                }
+
+            }
+
+        }
+
+    }
+
+    DispathD(a,g,dist,path,S,v);
+
+}
+
+void DispathF(MatGraph* g,int A[][MAXN],int path[][MAXN],AdjGraph* a){
+
+    int i,j,k,s;
+    int apath[MAXN],d;
+    for(i=0;i<g->n;i++){
+
+        for(j=0;j<g->n;j++){
+
+            if(A[i][j]!=INF && i!=j){
+
+                printf("从%d到%d的路径为:",a->adjlist[i].info,a->adjlist[j].info);
+                k = path[i][j];
+                d = 0;
+                apath[d] = j;
+                while(k!=-1 && k!=i){
+
+                    d++;
+                    apath[d] = k;
+                    k = path[i][k];
+
+                }
+                d++;
+                apath[d] = i;
+                printf("%d",a->adjlist[apath[d]].info);
+                for(s=d-1;s>=0;s--){
+
+                    printf(",%d",a->adjlist[apath[s]].info);
+
+                }
+                printf("\t路径长度为:%d\n",A[i][j]);
+
+            }
+
+        }
+
+    }
+
+}
+
+void Floyd(MatGraph* g,AdjGraph* a){
+
+    int A[MAXN][MAXN],path[MAXN][MAXN];
+    int i,j,k;
+    for(i=0;i<g->n;i++){
+
+        for(j=0;j<g->n;j++){
+
+
+            A[i][j] = g->edges[i][j];
+            if(i!=j && g->edges[i][j]<INF) path[i][j] = i;
+            else path[i][j] = -1;
+
+        }
+
+    }
+
+    for(k=0;k<g->n;k++){
+
+        for(i=0;i<g->n;i++){
+
+            for(j=0;j<g->n;j++){
+
+                if(A[i][j]>A[i][k]+A[k][j]){
+
+                    A[i][j] = A[i][k]+A[k][j];
+                    path[i][j] = path[k][j];
+
+                }
+
+            }
+
+        }
+
+    }
+
+    DispathF(g,A,path,a);
+
+}
+//冒泡排序
+void sort(int a[],int n)
+{
+    int min,i,j,t;
+    for(i=0;i<n-1;i++)
+    {
+        min=i;
+        for(j=i+1;j<n;j++)
+            if(a[min]>a[j])
+                min=j;
+        t=a[i];a[i]=a[min];a[min]=t;
+    }
+}
+
+void DSearch(AdjGraph* g,int v,int visit[]){
+
+    int w;
+    ArcNode *p;
+    SqStack *s;
+    InitStack(s);
+
+    printf("%d ",v);
+    visit[re[v]] = 1;
+    Push(s,re[v]);
+    while(!StackEmpty(s)){
+
+        int c = 0;
+        int temp[MAXN];
+        Pop(s,w);
+        p = g->adjlist[w].firstarc;
+        while(p != NULL){
+
+            if(visit[p->adjvex] == 0){
+
+                temp[c] = p->adjvex;
+                visit[p->adjvex] = 1;
+                c++;
+
+            }
+
+            p = p->nextarc;
+
+        }
+
+        sort(temp,c);
+        for(int i=0;i<c;i++){
+
+            printf("%d ",g->adjlist[temp[i]].info);
+            Push(s,temp[i]);
+
+        }
+
+
+    }
+
+    printf("\n");
+
+}
+void menu_UDG(){
+    printf("\n");
+    printf("请选择需要完成的操作:\n");
+    printf("1---DFS\n");
+    printf("2---BFS\n");
+    printf("3---Prim\n");
+    printf("4---Kruskal\n");
+    printf("5---Dijkstra\n");
+    printf("6---Floyd\n");
+    printf("7---D-Search\n");
+    printf("8---Quit\n");
+    printf("\n");
+}
+
+void CreateUDG(AdjGraph* a){	//创建无向图主程序
+    int i,j;
+    initRe();
+
+    MatGraph *m = (MatGraph *)malloc(sizeof(MatGraph));
+    printf("=======将建立一个无权无向图=======\n");
+    int n,e;
+
+    printf("请输入图的顶点数:");
+    scanf("%d",&n);
+    printf("请输入图的边数:");
+    scanf("%d",&e);
+
+    m->e = e;
+    m->n = n;
+
+    initMat(m);
+
+    printf("\n");
+    printf("请输入图的各顶点信息:\n");
+
+    for(i=0;i<n;i++){
+
+        printf("第%d个顶点信息(数字):",i+1);
+        int no1;
+        scanf("%d",&no1);
+        m->vexs[i].no = no1;
+        re[no1] = i;
+
+    }
+
+    printf("\n");
+    printf("请输入边的信息，格式为：序号1 序号2（序号依次为0、1、2……）:\n");
+
+    for(j=0;j<e;j++){
+
+        printf("请输入第%d条边:",j+1);
+        int t1,t2;
+        scanf("%d %d",&t1,&t2);
+        m->edges[re[t1]][re[t2]] = 1;
+        m->edges[re[t2]][re[t1]] = 1;
+
+    }
+
+    printf("\n");
+    CreateAdj(a,m,n,e);
+    DisAdjwu(a);
+    menu_UDG();
+    int s1 = 0;
+    int v;
+    int visit[MAXN] = {0};	//DFS的路径
+    int f1 = 0;
+
+    while(s1 != 8){
+
+        if(f1 == 0){
+
+            printf("是否将此无向图改为带权无向图？(1为是，其他为否):\n");
+            int f;
+            scanf("%d",&f);
+
+            if(f == 1){
+
+                quanMatwu(m,a);
+                f1 = 1;
+
+            }
+
+        }
+
+        printf("\n");
+        printf("请输入你的选择:\n");
+        scanf("%d",&s1);
+
+        switch(s1){
+
+            case 1:initVisit(visit);
+                printf("请输入深度优先遍历的开始结点:\n");
+                scanf("%d",&v);
+                printf("DFS结果为:\n");
+                DFS(a,v,visit);
+                printf("\n");
+                break;
+            case 2:initVisit(visit);
+                printf("请输入广度优先遍历的开始结点:\n");
+                scanf("%d",&v);
+                printf("BFS结果为:\n");
+                BFS(a,v,visit);
+                break;
+            case 3:if(f1 == 0){
+                    printf("此为无权图无法进行此算法!!\n");
+                    break;
+                }
+                printf("请输入Prim算法的开始结点:\n");
+                scanf("%d",&v);
+                printf("从该点开始的最小生成树为:\n");
+                Prim(a,m,v);
+                break;
+            case 4:if(f1 == 0){
+                    printf("此为无权图无法进行此算法!!\n");
+                    break;
+
+                }
+
+                printf("通过Kruskal算出的最小生成树为:\n");
+                Kruskal(a,m);
+                break;
+            case 5:if(f1 == 0){
+
+                    printf("此为无权图无法进行此算法!!\n");
+                    break;
+
+                }
+                printf("请输入Dijkstra的起始点:\n");
+                scanf("%d",&v);
+                printf("该点到各个点的最短路径为:\n");
+                Dijkstra(m,v,a);
+                break;
+            case 6:if(f1 == 0){
+
+                    printf("此为无权图无法进行此算法!!\n");
+                    break;
+
+                }
+
+                printf("每个点到其他点的最短路径为:\n");
+                Floyd(m,a);
+                break;
+            case 7:initVisit(visit);
+                printf("请输入D-Search从哪个点开始:\n");
+                scanf("%d",&v);
+                DSearch(a,v,visit);
+                break;
+            case 8:printf("程序结束!!\n");
+                return;
+            default:printf("无此项，请重新输入!!\n");
+                break;
+        }
+
+        printf("\n");
+
+    }
+}
+
+int *etv, *ltv;
+int *stack2;
+int top2;
+
+void TopSort(AdjGraph* GL,int f)
+{
+    ArcNode *p;
+    ArcNode *e;
+    int i, k, gettop;
+    int top = 0;
+    int count = 0;
+    int *stack;
+
+    stack = (int *)malloc(GL->n * sizeof(int));
+
+    for(i=0;i<GL->n;i++){
+
+        GL->adjlist[i].count = 0;
+
+    }
+
+    for(i=0;i<GL->n;i++){
+
+        p = GL->adjlist[i].firstarc;
+        while(p!=NULL){
+
+            GL->adjlist[p->adjvex].count++;
+            p = p->nextarc;
+
+        }
+
+    }
+
+    for( i=0; i < GL->n; i++ )
+    {
+        if( 0 == GL->adjlist[i].count )
+        {
+            stack[++top] = i;
+        }
+    }
+
+
+    top2 = 0;
+    etv = (int *)malloc(GL->n*sizeof(int));
+    for( i=0; i < GL->n; i++ )
+    {
+        etv[i] = 0;
+    }
+    stack2 = (int *)malloc(GL->n*sizeof(int));
+
+    while( 0 != top )
+    {
+
+        gettop = stack[top--];
+
+        if(f == 1){
+
+            printf("%d ", GL->adjlist[gettop].info);
+
+        }
+        stack2[++top2] = gettop;
+
+        count++;
+
+
+        for( e=GL->adjlist[gettop].firstarc; e; e=e->nextarc )
+        {
+            k = e->adjvex;
+
+            if( !(--GL->adjlist[k].count) )
+            {
+                stack[++top] = k;
+            }
+
+            if( (etv[gettop]+e->weight) > etv[k] )
+            {
+                etv[k] = etv[gettop] + e->weight;
+            }
+        }
+    }
+
+}
+
+void CriticalPath(AdjGraph* GL)
+{
+    ArcNode *e;
+    int i, gettop, k, j;
+    int ete, lte;
+
+    TopSort(GL,0);
+
+    ltv = (int *)malloc(GL->n*sizeof(int));
+    for( i=0; i < GL->n; i++ )
+    {
+
+        ltv[i] = etv[GL->n-1];
+    }
+
+    while( 0 != top2 )
+    {
+        gettop = stack2[top2--];
+
+        for( e=GL->adjlist[gettop].firstarc; e; e=e->nextarc )
+        {
+            k = e->adjvex;
+
+            if( (ltv[k] - e->weight) < ltv[gettop] )
+            {
+                ltv[gettop] = ltv[k] - e->weight;
+            }
+        }
+    }
+
+    for( j=0; j < GL->n; j++ )
+    {
+        for( e=GL->adjlist[j].firstarc; e; e=e->nextarc)
+        {
+            k = e->adjvex;
+            ete = etv[j];
+            lte = ltv[k] - e->weight;
+
+            if( ete == lte )
+            {
+                printf("<%d,%d>: %d \n", GL->adjlist[j].info, GL->adjlist[k].info, e->weight );
+            }
+        }
+    }
+}
+void menuDigraph(){
+    printf("\n");
+    printf("请选择需要完成的操作:\n");
+    printf("|1-----------DFS---------|\n");
+    printf("|2-----------BFS---------|\n");
+    printf("|3--Topological Sorting--|\n");
+    printf("|4-----Critical Path-----|\n");
+    printf("|5-------Dijkstra--------|\n");
+    printf("|6---------Floyd---------|\n");
+    printf("|7-------D-Search--------|\n");
+    printf("|8----------Quit---------|\n");
+    printf("\n");
+}
+
+void CreateDigraph(AdjGraph* a){
+
+    initRe();
+
+    MatGraph *m = (MatGraph *)malloc(sizeof(MatGraph));
+    printf("---------建立一个无权有向图------\n");
+    int n,e,i,j;
+
+    printf("请输入图的顶点数:");
+    scanf("%d",&n);
+    printf("请输入图的边数:");
+    scanf("%d",&e);
+
+    m->e = e;
+    m->n = n;
+
+    initMat(m);
+
+    printf("\n");
+    printf("请输入图的各顶点信息:\n");
+
+    for(i=0;i<n;i++){
+
+        printf("第%d个顶点信息（数字）",i+1);
+        int no1;
+        scanf("%d",&no1);
+        m->vexs[i].no = no1;
+        re[no1] = i;
+
+    }
+
+    printf("\n");
+    printf("请输入边的信息，格式为：序号1 序号2（序号依次为0、1、2……）:\n");
+
+    for(j=0;j<e;j++){
+
+        printf("请输入第%d条边:",j+1);
+        int t1,t2;
+        scanf("%d %d",&t1,&t2);
+        m->edges[re[t1]][re[t2]] = 1;
+
+    }
+    printf("\n");
+    CreateAdj(a,m,n,e);
+    DisAdjwu(a);
+    menuDigraph();
+    int s1 = 0;
+    int v;
+    int visit[MAXN] = {0};	//DFS的路径
+    int f1 = 0;
+
+    while(s1 != 8){
+        if(f1 == 0){
+            printf("是否将此无向图改为带权有向图？(1为是，其他为否):\n");
+            int f;
+            scanf("%d",&f);
+            if(f == 1){
+                quanMatyou(m,a);
+                f1 = 1;
+            }
+        }
+
+        printf("\n");
+        printf("请输入你的选择:\n");
+        scanf("%d",&s1);
+
+        switch(s1){
+
+            case 1:initVisit(visit);
+                printf("请输入深度优先遍历的开始结点:\n");
+                scanf("%d",&v);
+                printf("DFS结果为:\n");
+                DFS(a,v,visit);
+                printf("\n");
+                break;
+            case 2:initVisit(visit);
+                printf("请输入广度优先遍历的开始结点:\n");
+                scanf("%d",&v);
+                printf("BFS结果为:\n");
+                BFS(a,v,visit);
+                break;
+            case 3:printf("TopSort的结果之一为:\n");
+                TopSort(a,1);
+                printf("\n");
+                break;
+            case 4:if(f1 == 0){
+
+                    printf("此为无权图无法进行此算法!!\n");
+                    break;
+
+                }
+
+                printf("关键路径为:\n");
+                CriticalPath(a);
+                printf("\n");
+                break;
+            case 5:if(f1 == 0){
+
+                    printf("此为无权图无法进行此算法!!\n");
+                    break;
+
+                }
+                printf("请输入Dijkstra的起始点:\n");
+                scanf("%d",&v);
+                printf("该点到各个点的最短路径为:\n");
+                Dijkstra(m,v,a);
+                break;
+            case 6:if(f1 == 0){
+
+                    printf("此为无权图无法进行此算法!!\n");
+                    break;
+
+                }
+
+                printf("每个点到其他点的最短路径为:\n");
+                Floyd(m,a);
+                break;
+            case 7:initVisit(visit);
+                printf("请输入D-Search从哪个点开始:\n");
+                scanf("%d",&v);
+                DSearch(a,v,visit);
+                break;
+            case 8:printf("程序结束!!\n");
+                return;
+                break;
+            default:printf("无此项，请重新输入!!\n");
+                break;
+
+        }
+
+        printf("\n");
+
+    }
+
+}
+
+int main(){
+    int k=0;
+    AdjGraph *a;
+    printf("请输入你要执行的操作:要建立的是有向图（0）还是无向图（1），请选择（输入1或0,其他为退出）：");
+    scanf("%d",&k);
+    do {
+        switch(k){
+            case 0:CreateDigraph(a);
+                break;
+            case 1:CreateUDG(a);
+                break;
+        }
+    }while (k>=0&&k<=1);
+    printf("退出成功！\n");
+    return 0;
+}

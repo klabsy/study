@@ -1,0 +1,26 @@
+
+目的：
+    深入掌握单链表应用的算法设计。
+
+内容：
+    编写一个程序，完成如下功能：
+    (1)将用户输入的十进制整数字符串转化为带头结点的单链表每个结点存放一个整数位。
+    (2)求两个整数单链表相加的结果单链表。
+    (3)求结果单链表的中间位，如 123 的中间位为 2,1234 的中间位为 2。
+    
+本实验中设计的整数单链表的结点类型如下:
+    typedef struct node{
+       int data;
+       struct *node;
+    }
+
+功能算法设计如下：
+    CreateLink( NodeType *&h, char a[], int n )：创建整数单链表h。
+    DestroyLink( NodeType *&h )：释放整数单链表h。
+    DispLink( NodeType *h )：输出整数单链表h。
+    Add( NodeType *hl,*h2, NodeType *&h )：两整数单链表h1和h2相加得到h。
+    Reverse( *&h )：逆置整数单链表h。
+    Mid( NodeType *h )：求整数单链表h的中间位。
+
+Mid算法的思路是:
+    定义快指针 quick 和慢指针 slow，初始时均指向头结点，当快指针没有扫描完整数单链表 h 时，每次让慢指针 slow 前进一个结点，快指针 quick 前进两个结点。当快指针达到链表尾时，慢指针 slow 指向的结点就是中间结点。

@@ -1,0 +1,127 @@
+
+实验：
+    进行医务室模定。假设只有一个医生，在一小时内随机地来几个病人，每个病人所需处理时间为1-9分钟之间某个随机数。
+    要求程序模拟统计在设定时间内，医生的总空闲时间和病人的平均等待时间。
+
+要求：
+    将随机计算所得一小时内到达的病人数量、每个病人到达时间和所需处理时间写入文件“data.txt”中。写入格式如下：
+
+    第一行：10			// 一小时内到达10个病人病人
+    第二行：1	5		// 第1个病人在第1分钟到达，所需处理时间5分钟
+    第三行：4	7		// 第2个病人在第4分钟到达，所需处理时间7分钟
+    ……	……		// 第3个病人……
+    （随机生成病人到达时间，递增排序，以方便程序处理）
+    
+    将计算分析结果追加至文件末尾。写入格式如下：
+
+    第一行：1小时内共有 ** 位病人来看病。
+    第二行：医生的总空余时间为 ** 分钟。
+    第三行：病人的平均等待时间为 ** 分钟。
+
+参考代码：
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define TRUE 1
+#define FALSE 0
+
+typedef int boolean;
+typedef struct Sicker {//病人的结构
+	int arrive;//到达时间
+	int treat;//处理时间
+}sicker;
+typedef struct Node {
+	sicker data;
+	struct Node* next;
+}node;
+typedef struct Queue {
+	node* front;//队首
+	node* rear;//队尾
+}queue;
+
+queue* init() {
+	queue* head = (queue*)malloc(sizeof(queue));
+	head->front = (node*)malloc(sizeof(node));
+	head->rear = head->front;
+	head->front->next = NULL;
+	return head;
+}
+
+void inQueue(queue* q, sicker data) {
+	node* p = (node*)malloc(sizeof(node));
+	p->data = data;
+	p->next = NULL;
+	q->rear->next = p;
+	q->rear = p;
+}
+
+boolean isEmpty(queue* q) {
+	if (q->front->next == NULL)
+		return TRUE;
+	else
+		return FALSE;
+}
+
+sicker deQueue(queue* q) {
+	sicker e;
+	node* p = NULL;
+	if (isEmpty(q)) {
+		exit(0);
+	}
+	e = q->front->next->data;
+	p = q->front->next;
+	q->front->next = p->next;
+	free(p);
+	return e;
+}
+
+int getNum(int a,int b) {//产生一个[a,b]的随机数
+	srand((unsigned int)time(NULL));
+	return (rand()%(b-a))+a;
+}
+
+int main() {
+	sicker temp,cur;
+	queue* q = init();
+	int count = 0;
+	int n = getNum(1, 60);
+	int totalFree=0,aveWait=0;
+	int clock = 0;//定义时钟变量
+	int finish = 0,j=0;
+	temp.arrive = getNum(clock, 60);
+	if (60 - temp.arrive <= 9) {
+		temp.treat = getNum(1, 60 - temp.arrive);
+	}
+	else
+		temp.treat = getNum(1, 9);
+	do {
+		if (isEmpty(q)&&count<=n) {
+			totalFree += temp.arrive - clock;
+			clock = temp.arrive;
+			inQueue(q, temp);
+		}
+		if(!isEmpty(q))
+		  cur = deQueue(q);
+		aveWait += clock - cur.arrive;
+		finish = clock + cur.treat;
+		count++;
+		//将所有到达时间小于finish的病人添加到队列中
+		j = count + 1;
+		do {
+			temp.arrive = getNum(clock, 60);
+			temp.treat = getNum(1, 9);
+			if (temp.arrive <= finish)
+				inQueue(q, temp);
+			j++;
+		} while (j <= n);
+		clock = finish;
+	} while (clock<=60&&count<=n);
+	printf("1小时内共有%d位病人来看病\n", count);
+	printf("医生的总空余时间为%d\n", totalFree);
+	printf("病人的平均等待时间为%lf", (double)aveWait / count);
+	system("pause");
+	return 0;
+}
+
+以上代码仅供算法实现参考，与实验输入输入，要求并不相符。

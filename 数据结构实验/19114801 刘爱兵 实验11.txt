@@ -1,0 +1,97 @@
+#include<stdio.h>
+#define Col 4  
+#define Row 4 
+#define MaxSize 100 
+//定义全局变量
+	int top = -1; 
+	int count = 1; 
+	int minlen = MaxSize;
+int mg[Col+2][Row+2] = {{1,1,1,1,1,1},{1,0,0,0,1,1},{1,0,1,0,0,1},{1,0,0,0,1,1},{1,1,0,0,0,1},{1,1,1,1,1,1}}; 
+struct{
+		int i,j;
+		int mark;	
+	}St[MaxSize],Path[MaxSize];
+
+//输出一条路径并求最短路径 
+void path()  
+{
+	int k;
+	printf(" %5d: ",count++);  
+	for(k=0;k<=top;k++)
+		printf("( %d, %d)",St[k].i,St[k].j);
+	printf("\n");
+	if(top+1<minlen) 
+		{
+			for(k=0;k<=top;k++)  
+			Path[k] = St[k];
+			minlen = top+1; 
+		}
+}
+//输出最短路径 
+void minpath()
+	{
+		printf("最短路径如下：\n");
+		printf("长度：%d\n",minlen);
+		printf("路径：");
+		for(int k = 0;k<minlen;k++)
+		printf("(%d, %d)",Path[k].i,Path[k].j);
+		printf("\n");
+	}
+//求迷宫路径 
+void mgpath(int xi,int yi,int xe,int ye) 
+	{
+		int i,j,i1,j1,mark;
+		bool find;
+		top++; 
+		St[top].i = xi;
+		St[top].j = yi;
+		St[top].mark = -1;
+		mg[xi][yi] = -1;
+	while(top>-1)  
+	{
+		i = St[top].i;j = St[top].j;  
+		mark = St[top].mark;
+		if(i == xe&&j == ye)
+		{
+			path();
+			mg[i][j]=0;  
+			top--; 
+			i = St[top].i;j = St[top].j;
+			mark = St[top].mark; 
+		}
+		find = false;  
+		while(mark<4&&!find)
+			{
+			mark++;
+			switch(mark)
+			{
+				case 0:i1 = i-1;j1 = j; break;
+				case 1:i1 = i; j1 = j+1;break;
+				case 2:i1 = i+1;j1 = j; break;
+				case 3:i1 = i, j1 = j-1;break;
+			}
+			if(mg[i1][j1] == 0) find = true;
+			}
+			if(find) //找到下一个课走方块（i1,j1）进栈 
+			{
+				St[top].mark = mark; 
+				top++;
+				St[top].i = i1;
+				St[top].j = j1;
+				St[top].di = -1; 
+				mg[i1][j1] = -1; 
+			}
+			else
+			{
+				mg[i][j] = 0; 
+				top--;
+			}
+			}
+			minpath(); 
+}
+int main()
+{
+	printf("迷宫所有的路径如下：\n");
+	mgpath(1,1,Col,Row);
+	return ;
+}

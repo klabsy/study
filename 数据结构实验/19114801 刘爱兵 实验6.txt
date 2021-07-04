@@ -1,0 +1,87 @@
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct node{
+	char ch;
+	node *top;
+}linkstack;
+
+linkstack *Createstack(){
+	linkstack *S;
+	S =(linkstack *)malloc(sizeof(struct node));
+	S->top=NULL;
+	return S;
+}
+//入栈
+linkstack *Push(linkstack *S,char c){
+	linkstack *p;
+	p=(linkstack *)malloc(sizeof(struct node));
+	p->ch=c;
+	p->top=S->top;
+	S->top=p;
+	return S;
+}
+//出栈
+linkstack *Pop(linkstack *S){
+	linkstack *p;
+	p=S->top;
+	S->top=p->top;
+	free(p);
+	return S;
+}
+//取栈顶数
+char Gettop(linkstack *S){
+	if(S->top!=NULL){
+		return S->top->ch;
+	}
+	else return ' ';
+}
+
+//判断操作
+void Judge(){
+	linkstack *p;
+	char c;
+	int flag=1;
+	//初始化
+	p=Createstack();
+	printf("请输入算数表达式:(输入'#'结束！)\n");
+	c=getchar();
+	while(c!='#'){
+		switch(c){
+		case '(':
+			p=Push(p,c);break;
+	
+	//	case '[':
+	//		p=Push(p,c);break;
+	//	}
+
+		case ')':
+			if(Gettop(p)=='(') //若栈顶是(,则出栈
+				p=Pop(p);
+			else			   //若栈顶不是(,则匹配错误
+				flag=0;
+			break;
+
+
+	}
+	if(flag==0)
+		break;
+	else
+		c=getchar();
+	
+}
+	if(p->top!=NULL){
+		flag=0;
+	}
+
+
+	if(flag==1) 
+	printf("算术表达式圆括号配对正确!\n"); 
+	if(flag==0) 
+	printf("算术表达式圆括号配对错误!\n"); 
+}
+
+int main(){
+	Judge();
+	return 0;
+
+}

@@ -1,0 +1,89 @@
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct Node{
+	int equ,exp;  //多项式系数equ
+	struct Node *next;
+}Node,*Linklist;
+
+//创建多项式
+Linklist CreateDuo(){
+	Linklist L;
+	L=(Linklist)malloc(sizeof(struct Node));
+	L->next=NULL;
+	Node *p,*q;
+	q=L;
+	printf("请输入多项式的长度:");
+	int n,i;
+	scanf("%d",&n);
+	printf("请输入多项式系数和指数(中间用空格隔开):\n");
+	for(i=0;i<n;i++){
+		p=(Node*)malloc(sizeof(struct Node));
+		scanf("%d%d",&p->equ,&p->exp);
+		q->next=p;
+		q=p;
+	}
+	q->next=NULL;
+	return L;
+}
+//查看多项式
+void ShowDuo(Linklist L){
+	Node *p;
+	p=L->next;
+	printf("系数:%d 指数:%d",p->equ,p->exp);
+	p=p->next;
+	while(p!=NULL){
+		printf("-->系数:%d 指数:%d",p->equ,p->exp);
+		p=p->next;
+	}
+	printf("\n");
+}
+
+Linklist SumDuo(Linklist LA,Linklist LB){
+	Node *p,*q,*u,*pre;
+	int x; //计算多项式系数和值
+	p=LA->next;
+	q=LB->next;
+	pre =LA;
+	while ((p!=NULL)&&(q!=NULL))
+	{
+		if(p->exp<q->exp){
+			pre=p;
+			p=p->next;
+			
+		}
+		else if(p->exp==q->exp){
+			x=p->equ + q->equ;
+			if(x!=0){p->equ=x;pre=p;}
+			else{pre->next=p->next;free(p);}
+			p=pre->next;
+			u=q;
+			q=q->next;
+			free(u);
+		}
+		else{ //p->exp>q->exp时
+			u=q->next;
+			q->next=p;
+			pre->next=q;
+			pre=q;
+			q=u;
+		}	
+		}
+			if(q!=NULL){
+				pre->next=q;
+				free(LB);
+			}
+	return LA;	
+}
+
+int main(){
+	Linklist LA=CreateDuo();
+	Linklist LB=CreateDuo();
+	printf("多项式A:\n");
+	ShowDuo(LA);
+	printf("多项式B:\n");
+	ShowDuo(LB);
+	printf("\n");
+	printf("合并后多项式:");
+    	ShowDuo(SumDuo(LA,LB));
+    	return 0;
+}

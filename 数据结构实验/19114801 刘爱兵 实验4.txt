@@ -1,0 +1,87 @@
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct Node{
+	int data;
+	struct Node *next;
+}Node,*Linklist;
+
+Linklist createlist(){
+	Linklist L;
+	L=(Linklist)malloc(sizeof(struct Node));
+	L->next=NULL;
+	Node *p,*q;
+	q=L;
+	printf("请输入单链表长度:");
+	int n,i;
+	scanf("%d",&n);
+	printf("请输入单链表内容:");
+	for(i=0;i<n;i++){
+		p=(Node*)malloc(sizeof(struct Node));
+		scanf("%d",&p->data);
+		q->next=p;
+		q=p;
+	}
+	q->next=NULL;
+	return L;
+}
+
+void showlist(Linklist L){
+	Node *p;
+	p=L->next;
+	printf("%d",p->data);
+	p=p->next;
+	while(p!=NULL){
+		printf("->%d",p->data);
+		p=p->next;
+	}
+	printf("\n");
+}
+
+Linklist mergelist(Linklist LA,Linklist LB){
+	Node *Pa,*Pb,*Pc;
+	Pa=LA->next;
+	Pb=LB->next;
+	Linklist LC;
+	LC=LA;
+	LC->next=NULL;
+	Pc=LC;
+	while (Pa!=NULL&&Pb!=NULL)
+	{
+			if(Pa->data<=Pb->data){
+				Pc->next=Pa;
+				Pc=Pa;
+				Pa=Pa->next;
+			}
+			else{
+				Pc->next=Pb;
+				Pc=Pb;
+				Pb=Pb->next;
+			}
+			//用于在Pa，Pb中某一个为空，这时，让Pc的后继指向Pa，Pb
+			if(Pa){
+				Pc->next=Pa;
+			}
+			else{
+				Pc->next=Pb;
+			}
+	}
+	
+	return LC;
+	
+}
+
+
+int main(){
+	Linklist LA=createlist();
+	Linklist LB=createlist();
+	printf("线性表A:");
+	showlist(LA);
+	printf("线性表B:");
+	showlist(LB);
+
+	Linklist LC;
+	LC=mergelist(LA,LB);
+	printf("线性表C:");
+    showlist(LC);
+    return 0;
+}
