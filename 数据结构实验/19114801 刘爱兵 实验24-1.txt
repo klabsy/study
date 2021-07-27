@@ -1,0 +1,216 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define MAXVERTICES 100
+#define m 4 //这里定义的邻接矩阵为4×4，创建邻接表应也是4个顶点和边
+
+typedef int ElemType;
+
+#define	MAXV 100				
+//邻接矩阵
+typedef struct
+{  	int no;					
+    ElemType info;			
+} VertexType;					
+typedef struct  			
+{  	int edges[MAXV][MAXV]; 		
+    int n,e;   					
+    VertexType vexs[MAXV];		
+} MGraph;					
+
+//邻接表
+typedef struct NODE
+{
+    int adjvex;
+    struct NODE *next;
+}EdgeNode;
+
+typedef struct
+{
+    ElemType vertex;
+    EdgeNode *edgenext;
+}VertexNode;
+
+typedef VertexNode AdjList[MAXVERTICES];
+
+typedef struct
+{
+    AdjList adjlist;
+    int Vn;
+    int Ve;
+}AdjTable;
+
+
+
+
+//创建邻接表
+void creatTable(AdjTable *G)
+{
+    int n, e, vi, vj;
+    EdgeNode *s;
+    printf("请输入图的顶点和边的个数（用空格隔开,4x4）：");
+    scanf("%d%d", &n, &e);
+    G->Vn = n;
+    G->Ve = e;
+
+    printf("\n输入图的顶点信息");
+    for (int i = 0; i < G->Vn; i++)
+    {
+        printf("\n请输入第%d个顶点的信息（整数）：", i + 1);
+        scanf("%d", &G->adjlist[i].vertex);
+        G->adjlist[i].edgenext = NULL;
+    }
+    printf("\n建立边表\n");
+    for (int j = 0; j < G->Ve; j++)
+    {
+        printf("输入边的两个端点的下标（用空格隔开）：\n");
+        scanf("%d%d", &vi, &vj);
+        vi -= 1;
+        vj -= 1;
+        s = (EdgeNode*)malloc(sizeof(EdgeNode));
+        s->adjvex = vj;
+        s->next = G->adjlist[vi].edgenext;
+        G->adjlist[vi].edgenext = s;
+
+        s = (EdgeNode*)malloc(sizeof(EdgeNode));
+        s->adjvex = vi;
+        s->next = G->adjlist[vj].edgenext;
+        G->adjlist[vj].edgenext = s;
+
+    }
+}
+//显示邻接表
+void ShowAdjTable(AdjTable *G)
+{
+    int i;
+    printf("显示顶点信息：\n");
+    for (i = 0; i < G->Vn; i++)
+    {
+        printf("%d ", G->adjlist[i].vertex);
+    }
+    printf("\n显示边的信息：\n");
+    for (i = 0; i < G->Vn; i++)
+    {
+        printf("%d", i + 1);
+        while (1)
+        {
+            if (G->adjlist[i].edgenext == NULL)
+            {
+                //	printf("空");
+                break;
+            }
+            printf(" -> %d", G->adjlist[i].edgenext->adjvex+1);
+            G->adjlist[i].edgenext = G->adjlist[i].edgenext->next;
+        }
+        printf("\n");
+    }
+}
+
+//将邻接表G转换成邻接矩阵g
+void ListToMat(AdjTable *G,MGraph &g)
+{	int i;
+    EdgeNode *p;
+    for (i=0;i<G->Vn;i++)
+    {	
+		p=G->adjlist[i].edgenext;
+        while (p!=NULL)
+        {	
+			g.edges[i][p->adjvex]=1;
+            p=p->next;
+        }
+    }
+    g.n=G->Vn;g.e=G->Ve;
+
+}
+
+void DispMat(MGraph *g)
+//输出邻接矩阵g
+{
+    int i,j;
+    for (i=0;i<g->n;i++)
+    {
+        for (j=0;j<g->n;j++){
+            printf("%3d",g->edges[i][j]);}
+        printf("\n");
+    }
+}
+
+
+
+void backtrack(int color[],int *i){   //回溯过程
+    if (*i>0)
+        while (color[*i]==4)
+            (*i)--;
+}
+int check(int color[], int *i,MGraph &g){     //检查是否合法
+    int k,b;
+    b=1;
+    for(k=0;k<=*i-1;k++)
+        if(color[k]*g.edges[*i][k]==color[*i])
+            b=0;
+    if(b)
+        return 1;
+    else
+        return 0;
+}
+void print (int color[]){          //打印一种填色方案
+    int k;
+    for(k=0;k<m;k++)
+        //	printf("%d",color[k]);
+    {
+        if(color[k]==1) {printf("R");}
+        if(color[k]==2) {printf("Y");}
+        if(color[k]==3) {printf("B");}
+        if(color[k]==4) {printf("G");}
+    }
+    printf("\n");
+}
+
+
+int main()
+{
+
+
+    int i,total=0;
+    int color[m];
+	int j;
+    AdjTable G;
+    MGraph g1;
+	creatTable(&G);
+ //   ShowAdjTable(&G);
+	g1.n=G.Vn;
+	g1.e=G.Vn;
+    for (i=0;i<g1.n;i++)
+        for (j=0;j<g1.e;j++)
+            g1.edges[i][j]=0;
+    ListToMat(&G,g1);
+
+	printf(" 图G的邻接表转换成邻接邻阵:\n");
+	DispMat(&g1);
+
+
+    for(i=0;i<m;i++)
+        color[i]=0;
+    i=0;
+    do{
+        color[i]++;
+        if(check(color,&i,g1))
+            if (i==m-1){
+                total++;
+                printf("%d: ",total);
+                print(color);
+                if(color[i]==4)
+                    backtrack(color,&i);
+            }
+            else{
+                i=i+1;
+                color[i]=0;
+            }
+        else
+        if (color[i]==4)
+            backtrack(color,&i);
+    }while (i);
+    printf("\n");
+    printf("total = %d\n",total);
+    return 0;
+}
+

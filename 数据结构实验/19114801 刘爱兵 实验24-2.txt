@@ -1,0 +1,66 @@
+#include<stdio.h>
+int n,m;
+long total=0;
+int data[1000][1000];
+int color[1000];
+
+bool check(int pt)
+{
+ int i;
+ for(i=1;i<=pt-1;i++)
+ {
+  if(data[i][pt]==1)
+   {
+    if(color[i]==color[pt]) return true;
+   }
+ }
+ return false;
+}
+
+void trycolor(int pt)
+{
+ int i;
+ if(pt>m)
+ {
+ 	printf("%d: ",total);
+  for(i=1;i<=m;i++)
+  	printf("%d",color[i]); 
+  total++;
+  printf("\n"); 
+ }
+ else
+ {
+  for(i=1;i<=n;i++)
+  {
+   color[pt]=i;
+   if(check(pt)==false)
+   trycolor(pt+1);
+  }
+ }
+}
+
+int main()
+{
+	int k;
+	int x,y;
+	int i,j;
+	printf("输入图的边和顶点（用空格隔开）：\n"); 
+	scanf("%d%d",&n,&m);
+	printf("输入填充颜色的个数：\n");
+	scanf("%d",&k);
+ 	for(i=0;i<1000;i++)
+  		for(j=0;j<1000;j++)
+   			data[i][j]=0;
+
+ 	for(i=0;i<=m;i++)
+  		color[i]=0;
+	printf("输入边的两个端点的下标（用空格隔开）："); 
+ 	for(i=0;i<k;i++)
+	 {
+ 		scanf("%d%d",&x,&y);
+  		data[x][y]=1;
+ 	}
+	trycolor(1);
+	printf("%d",total);
+	return 0;
+}
