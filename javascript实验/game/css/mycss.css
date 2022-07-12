@@ -1,0 +1,36 @@
+ .cs {
+ 	width: 100%;
+ 	/*max-width: 100%;*/
+ }
+ 
+ #start {
+ 	display: block;
+ 	/*margin: 130px auto;*/
+ }
+ 
+ #info {
+ 	background-size: 80px;
+ 	background-repeat: no-repeat;
+ 	background-position: bottom right;
+ 	color: darkred;
+ 	font-size: 38px;
+ 	font-weight: 800;
+ 	margin: 26px;
+ }
+ 
+ #jb {
+ 	font-size: 38px;
+ 	padding: 15px;
+ 	margin: 30px;
+ }
+ 
+ button,
+ input {
+ 	font-size: 19px;
+ 	height: 50px;
+ 	padding: 10px;
+ }
+ body{
+	touch-action: none;/*任何触摸事件都不会产生默认行为，但是 touch 事件照样触发*/ 
+	}
+	.mui-scroll{padding: 50px 20px; background-color: white ;}

@@ -1,0 +1,39 @@
+{
+  "index.html": {
+    "resources": [
+      "css/mycss.css",
+      "img/start.gif",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "img/guess1.jpg"
+    ],
+    "refer": [
+      "yx.html",
+      "hlist.html"
+    ]
+  },
+  "yx.html": {
+    "resources": [
+      "fonts/mui.ttf",
+      "img/b5.gif",
+      "css/mycss.css",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "img/d.PNG",
+      "img/d4.gif"
+    ],
+    "refer": [
+      "hlist.html"
+    ]
+  },
+  "hlist.html": {
+    "resources": [
+      "css/mui.min.css",
+      "img/b1.png",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mycss.css"
+    ],
+    "refer": []
+  }
+}

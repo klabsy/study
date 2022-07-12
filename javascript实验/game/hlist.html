@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/mycss.css" rel="stylesheet"/>
+</head>
+
+<body>
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">历 史 战 绩</h1>
+</header>
+<div class="mui-content">
+    <div class="mui-scroll-wrapper">
+        <div class="mui-scroll">
+            <!—使得真机运行时，页面也能滚动显示-->
+            <ul class="mui-table-view" id="hlist">
+
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="js/mui.min.js"></script>
+<script type="text/javascript">
+    mui.init();
+    mui(".mui-scroll-wrapper").scroll();
+    if (localStorage.getItem("arr")) {
+        arr = localStorage.getItem("arr").split(",");
+    }
+    if (localStorage.getItem("m_time")) {
+        m_time = localStorage.getItem("m_time").split(",");
+        console.log(m_time)
+    }
+
+    var mintime = m_time[0]
+    var n = arr.length - 1;
+    var time_index = 0
+    for (; n >= 0; n--) {
+        if (mintime < m_time[n]) {
+            mintime = m_time[n]
+            time_index = n
+        }
+    }
+    var n = arr.length - 1;
+    for (; n >= 0; n--) {
+        var index = arr[n].indexOf("开始");
+        var cs = arr[n].substring(index + 3);
+        var time = arr[n].substring(0, index + 2);
+        if (n===1){
+            hlist.innerHTML += "<li class=\"mui-table-view-cell\" style='background-color: #4cd964;'> <img class=\"mui-media-object mui-pull-left\" src=\"img/b1.png\"> " + cs + "<p class=\"mui-ellipsis\">" + time + "</p></li>"
+        }
+        else {
+            hlist.innerHTML += "<li class=\"mui-table-view-cell\"> <img class=\"mui-media-object mui-pull-left\" src=\"img/b1.png\"> " + cs + "<p class=\"mui-ellipsis\">" + time + "</p></li>"
+        }
+    }
+
+    var a = localStorage.me//localStorage.length
+
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/mycss.css" rel="stylesheet"/>
+</head>
+
+<body>
+
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">猜 数 字</h1>
+</header>
+<div class="mui-content" style="padding-top: 50%">
+    <input type="text" class="mui-input-clear" style="height: 50px;" id="myguess" placeholder="请输入 1 到 100 之间的数字"/>
+    <button type="button" class="mui-btn mui-btn-green mui-btn-block">确定</button>
+    <span class="mui-badge mui-badge-red" id="jb"> </span>
+    <div id="info"></div>
+</div>
+<nav class="mui-bar mui-bar-tab">
+    <button class="mui-btn mui-btn-primary  mui-btn-block" id="his">历 史 战 绩</button>
+</nav>
+<!-- <img src="img/d4.gif" />-->
+<script src="js/mui.min.js"></script>
+<script type="text/javascript">
+    mui.init()
+    var num = Math.floor(Math.random() * 100 + 1);　 //产生1～100之间的随机整数
+    var myguess = document.getElementById("myguess");
+    var info = document.getElementById("info");
+    var i = 0;
+    var ks = new Date();
+    myguess.onfocus = function () {
+        myguess.value = '';
+    }
+    var arr = [];
+    var m_time = [];
+    myguess.onchange = function () {
+
+        var guess = myguess.value;
+        document.getElementById("jb").innerHTML = guess; //parseInt(guess);
+        i++;
+        info.style.backgroundImage = "url(img/b5.gif)";
+        if (guess == num) {
+            info.innerHTML = "恭喜您，猜对了，<br><br>幸运数字是：" + num;
+            info.style.backgroundImage = "url(img/d4.gif)"; //d.png
+
+            var over = new Date().getTime();
+            var m = Math.floor((over - ks.getTime()) / (1000)); //计算剩余的秒数
+            info.innerHTML += "<br><br>共输入" + i + "次,<br><br>用时" + m + "秒<br><br>game over";
+
+            var t = ks.getFullYear() + "-" + (ks.getMonth() + 1) + "-" +
+                ks.getDate() + " " + ks.getHours() + ":" +
+                ks.getMinutes() + ":" + ks.getSeconds();
+            var his = t + "开始-输入" + i + "次-用时" + m + "秒";
+            if (localStorage.getItem("arr")) {
+                arr = localStorage.getItem("arr").split(",");
+            }
+            arr.push(his);
+            localStorage.setItem("arr", arr);
+
+
+            if (localStorage.getItem("m_time")) {
+                m_time = localStorage.getItem("m_time").split(",");
+            }
+            m_time.push(m)
+            localStorage.setItem("m_time", m_time);
+            return;
+        }
+        console.log(num)
+        if (guess < num)
+            info.innerHTML = "第" + i + "次输入，<br><br>" + "小了<br><br>";
+        else
+            info.innerHTML = "第" + i + "次输入，<br><br>" + "大了<br><br>";
+    }
+
+    mui('#his')[0].addEventListener('tap', function () {
+        //打开关于页面
+        mui.openWindow({
+            url: 'hlist.html',
+            id: 'hlist.html'
+        });
+    });
+
+
+</script>
+</body>
+
+</html>

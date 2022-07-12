@@ -1,0 +1,27 @@
+#div{
+    border:#909090 1px solid;
+    background:rgba(0,0,80,0.4);
+    color:#333;
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);
+    -moz-box-shadow: 2px 2px 10px #909090;
+    -webkit-box-shadow: 2px 2px 10px #909090;
+    box-shadow:4px 4px 10px #606060;
+    border-radius: 2px;
+}
+#divWork,#divLeft,#divTitle{
+    border:#909090 0px solid;
+    background:#ffffff;
+    color:#333;
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);
+    -moz-box-shadow: 2px 2px 10px #909090;
+    -webkit-box-shadow: 2px 2px 10px #909090;
+    box-shadow:8px 8px 20px #404040;
+    border-radius: 2px;
+}
+
+p,button{
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}

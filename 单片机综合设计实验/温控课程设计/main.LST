@@ -1,0 +1,63 @@
+C51 COMPILER V9.57.0.0   MAIN                                                              12/24/2021 09:50:06 PAGE 1   
+
+
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: D:\bianchen\Keil uvision5 C51\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg51.h>
+   2          #include <lcd1602.h>
+   3          #include <at24c02.h>
+   4          #include <temperature.h>
+   5          #include <motor.h>
+   6          #define uint unsigned int
+   7          #define uchar unsigned char
+   8          
+   9          void main()
+  10          {
+  11   1      
+  12   1              init_show();                                                    //开机动画显示
+  13   1              init_fuction();                                                 //界面显示
+  14   1      
+  15   1              upper=read24c02(0);                                             //读取24C02数据,读取的是上限值
+  16   1              lower=read24c02(1);                                             //读取24C02数据,读取的是下限值
+  17   1      
+  18   1              show_h(upper);                                                  //将数据显示出来,显示的是上限值
+  19   1              show_l(lower);                                                  //将数据显示出来,显示的是下限值
+  20   1      
+  21   1              while(1)                                                                
+  22   1              {
+  23   2      
+  24   2              /* 细化check函数，分成判断读取电机档位，按键扫描 */
+  25   2              /* 此处调用电机和按钮设置模块 */
+  26   2      
+  27   2                      motor_init();                                   //启动电机判断程序,开中断，启动中断
+  28   2                                  
+  29   2              }
+  30   1      }
+  31          
+  32          void fun() interrupt 1{
+  33   1              TR0=0;                                                                  //定时器关闭
+  34   1              TH_TL();                                                                //开中断
+  35   1      
+  36   1              m_gear=read_gear();                                         //读取当前档位
+  37   1              check_button();                                             //判断有没有按钮的操作
+  38   1      
+  39   1              TR0=1;                                                              //定时器开启
+  40   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2769    ----
+   CONSTANT SIZE    =     23    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     14      26
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

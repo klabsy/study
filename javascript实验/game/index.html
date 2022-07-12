@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!--<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />-->
+    <title></title>
+
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/mycss.css" rel="stylesheet"/>
+</head>
+
+<body>
+<header class="mui-bar mui-bar-nav">
+    <h1 class="mui-title">小 游 戏</h1>
+</header>
+<div class="mui-content">
+    <img src="img/guess1.jpg" class="cs" style=""/>
+    <h1 style="text-align: center;font-size: 90px;margin-top: 80px;font-family: KaiTi;color: #0c0d10;">
+        欢迎来到猜数字小游戏</h1>
+
+    <h1 style="text-align: center;font-size: 70px;margin-top: 30px;font-family: KaiTi;color: #0a0808;">游戏规则</h1>
+    <h1 style="text-align: center;font-size: 50px;margin-top: 30px;font-family: KaiTi;
+    color: #0a0a0c;">
+        程序设置一个1到100之间的数字作为猜测的结果,用户进行猜测。</h1>
+    <h1 style="text-align: center;font-size: 50px;margin-top: 30px;font-family: KaiTi;
+    color: #1c1616;">用户每猜测一次,系统提示猜测结果:大了、小了、猜对了;</h1>
+    <h1 style="text-align: center;font-size: 50px;margin-top: 30px;font-family: KaiTi;
+    margin-bottom: 80px;
+    color: cornflowerblue;">
+        直到用户猜对结果,则提示游戏结束。</h1>
+    <img src="img/start.gif" id="start" style="width: 35%;display: inline;margin-left: 15%;"/>
+    <button class="mui-btn mui-btn-primary  mui-btn-block" id="his"
+            style="width: 300px;height: 130px;display: inline;font-size: 45px;font-family: KaiTi;
+            font-weight: bold;
+            border-radius: 5%;margin-left: 30px;">历 史 战 绩
+    </button>
+    <!-- <button type="button"  id="start" class="mui-btn-block mui-btn-blue mui-btn-outlined mui-btn-block">开始游戏</button>-->
+</div>
+<script src="js/mui.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    mui.init(); //document.getElementById('start')
+    mui('#start')[0].addEventListener('tap', function () {
+        //打开关于页面
+        mui.openWindow({
+            url: 'yx.html',
+            id: "yx"
+        });
+    });
+
+    mui('#his')[0].addEventListener('tap', function () {
+        //打开关于页面
+        mui.openWindow({
+            url: 'hlist.html',
+            id: 'hlist.html'
+        });
+    });
+</script>
+</body>
+
+</html>
